@@ -1,3 +1,4 @@
+import 'package:drizzle_app/src/timeSeries.dart';
 import 'package:test/test.dart';
 import 'package:http/http.dart' as http;
 import 'package:geojson/geojson.dart';
@@ -18,13 +19,8 @@ void main() {
 
     final res = await http.get(url, headers: requestHeaders);
     if (res.statusCode == 200) {
-      final test = await _parseHourlyData(res.body);
+      final test = await parseHourlyData(res.body);
       expect(test, isNotNull);
     }
   });
-}
-
-Future<GeoJsonFeatureCollection> _parseHourlyData(String data) async {
-  final features = await featuresFromGeoJson(data);
-  return features;
 }
