@@ -28,6 +28,8 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        leading: Icon(Icons.cloud),
+
       ),
       body: Center(
         child: Column(
