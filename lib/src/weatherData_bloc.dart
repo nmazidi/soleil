@@ -9,8 +9,10 @@ class WeatherDataBloc {
   HashMap<int, TimeSeries> _cachedData;
 
   final _timeSeriesListSubject = BehaviorSubject<List<TimeSeries>>();
+  final _coordinatesController = StreamController<List<double>>();
 
   Stream<List<TimeSeries>> get timeSeriesList => _timeSeriesListSubject.stream;
+  Sink<List<double>> get coordinates => _coordinatesController.sink;
 
   var _timeSeriesList = <TimeSeries>[];
 
@@ -27,5 +29,7 @@ class WeatherDataBloc {
     });
     // HashMap to store cached data in
     _cachedData = HashMap<int, TimeSeries>();
+    // Listen to a change to the requested coordinates and execute
+    _coordinatesController.stream.listen((coordinates) async {});
   }
 }
