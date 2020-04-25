@@ -7,6 +7,8 @@ import 'serializers.dart';
 part 'timeSeries.g.dart';
 
 abstract class TimeSeries implements Built<TimeSeries, TimeSeriesBuilder> {
+  static Serializer<TimeSeries> get serializer => _$timeSeriesSerializer;
+
   /// The timestamp of the given forecast in yyyy-mm-ddThh:mmZ.
   String get time;
 
@@ -76,7 +78,15 @@ abstract class TimeSeries implements Built<TimeSeries, TimeSeriesBuilder> {
   factory TimeSeries([void Function(TimeSeriesBuilder) updates]) = _$TimeSeries;
 }
 
-Future<GeoJsonFeatureCollection> parseHourlyData(String data) async {
-  final features = await featuresFromGeoJson(data);
-  return features;
+Future<List> parseHourlyData(String data) async {
+  final _feature = (await featuresFromGeoJson(data)).collection[0];
+  return _feature.properties.entries
+      .where((a) => a.key.contains("timeSeries"))
+      .toList()[0]
+      .value;
+}
+
+void deserializeHourlyData(List data) {
+  data.map(
+      (a) => standardSerializers.deserializeWith(TimeSeries.serializer, a));
 }

@@ -6,6 +6,171 @@ part of 'timeSeries.dart';
 // BuiltValueGenerator
 // **************************************************************************
 
+Serializer<TimeSeries> _$timeSeriesSerializer = new _$TimeSeriesSerializer();
+
+class _$TimeSeriesSerializer implements StructuredSerializer<TimeSeries> {
+  @override
+  final Iterable<Type> types = const [TimeSeries, _$TimeSeries];
+  @override
+  final String wireName = 'TimeSeries';
+
+  @override
+  Iterable<Object> serialize(Serializers serializers, TimeSeries object,
+      {FullType specifiedType = FullType.unspecified}) {
+    final result = <Object>[
+      'time',
+      serializers.serialize(object.time, specifiedType: const FullType(String)),
+      'screenTemperature',
+      serializers.serialize(object.screenTemperature,
+          specifiedType: const FullType(double)),
+      'maxScreenAirTemp',
+      serializers.serialize(object.maxScreenAirTemp,
+          specifiedType: const FullType(double)),
+      'minScreenAirTemp',
+      serializers.serialize(object.minScreenAirTemp,
+          specifiedType: const FullType(double)),
+      'screenDewPointTemperature',
+      serializers.serialize(object.screenDewPointTemperature,
+          specifiedType: const FullType(double)),
+      'feelsLikeTemperature',
+      serializers.serialize(object.feelsLikeTemperature,
+          specifiedType: const FullType(double)),
+      'windSpeed10m',
+      serializers.serialize(object.windSpeed10m,
+          specifiedType: const FullType(double)),
+      'windDirectionFrom10m',
+      serializers.serialize(object.windDirectionFrom10m,
+          specifiedType: const FullType(double)),
+      'windGustSpeed10m',
+      serializers.serialize(object.windGustSpeed10m,
+          specifiedType: const FullType(double)),
+      'max10mWindGust',
+      serializers.serialize(object.max10mWindGust,
+          specifiedType: const FullType(double)),
+      'visibility',
+      serializers.serialize(object.visibility,
+          specifiedType: const FullType(double)),
+      'screenRelativeHumidity',
+      serializers.serialize(object.screenRelativeHumidity,
+          specifiedType: const FullType(double)),
+      'mslp',
+      serializers.serialize(object.mslp, specifiedType: const FullType(int)),
+      'uvIndex',
+      serializers.serialize(object.uvIndex, specifiedType: const FullType(int)),
+      'significantWeatherCode',
+      serializers.serialize(object.significantWeatherCode,
+          specifiedType: const FullType(int)),
+      'precipitationRate',
+      serializers.serialize(object.precipitationRate,
+          specifiedType: const FullType(double)),
+      'totalPrecipAmount',
+      serializers.serialize(object.totalPrecipAmount,
+          specifiedType: const FullType(double)),
+      'totalSnowAmount',
+      serializers.serialize(object.totalSnowAmount,
+          specifiedType: const FullType(double)),
+      'probOfPrecipitation',
+      serializers.serialize(object.probOfPrecipitation,
+          specifiedType: const FullType(int)),
+    ];
+
+    return result;
+  }
+
+  @override
+  TimeSeries deserialize(Serializers serializers, Iterable<Object> serialized,
+      {FullType specifiedType = FullType.unspecified}) {
+    final result = new TimeSeriesBuilder();
+
+    final iterator = serialized.iterator;
+    while (iterator.moveNext()) {
+      final key = iterator.current as String;
+      iterator.moveNext();
+      final dynamic value = iterator.current;
+      switch (key) {
+        case 'time':
+          result.time = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
+        case 'screenTemperature':
+          result.screenTemperature = serializers.deserialize(value,
+              specifiedType: const FullType(double)) as double;
+          break;
+        case 'maxScreenAirTemp':
+          result.maxScreenAirTemp = serializers.deserialize(value,
+              specifiedType: const FullType(double)) as double;
+          break;
+        case 'minScreenAirTemp':
+          result.minScreenAirTemp = serializers.deserialize(value,
+              specifiedType: const FullType(double)) as double;
+          break;
+        case 'screenDewPointTemperature':
+          result.screenDewPointTemperature = serializers.deserialize(value,
+              specifiedType: const FullType(double)) as double;
+          break;
+        case 'feelsLikeTemperature':
+          result.feelsLikeTemperature = serializers.deserialize(value,
+              specifiedType: const FullType(double)) as double;
+          break;
+        case 'windSpeed10m':
+          result.windSpeed10m = serializers.deserialize(value,
+              specifiedType: const FullType(double)) as double;
+          break;
+        case 'windDirectionFrom10m':
+          result.windDirectionFrom10m = serializers.deserialize(value,
+              specifiedType: const FullType(double)) as double;
+          break;
+        case 'windGustSpeed10m':
+          result.windGustSpeed10m = serializers.deserialize(value,
+              specifiedType: const FullType(double)) as double;
+          break;
+        case 'max10mWindGust':
+          result.max10mWindGust = serializers.deserialize(value,
+              specifiedType: const FullType(double)) as double;
+          break;
+        case 'visibility':
+          result.visibility = serializers.deserialize(value,
+              specifiedType: const FullType(double)) as double;
+          break;
+        case 'screenRelativeHumidity':
+          result.screenRelativeHumidity = serializers.deserialize(value,
+              specifiedType: const FullType(double)) as double;
+          break;
+        case 'mslp':
+          result.mslp = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int;
+          break;
+        case 'uvIndex':
+          result.uvIndex = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int;
+          break;
+        case 'significantWeatherCode':
+          result.significantWeatherCode = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int;
+          break;
+        case 'precipitationRate':
+          result.precipitationRate = serializers.deserialize(value,
+              specifiedType: const FullType(double)) as double;
+          break;
+        case 'totalPrecipAmount':
+          result.totalPrecipAmount = serializers.deserialize(value,
+              specifiedType: const FullType(double)) as double;
+          break;
+        case 'totalSnowAmount':
+          result.totalSnowAmount = serializers.deserialize(value,
+              specifiedType: const FullType(double)) as double;
+          break;
+        case 'probOfPrecipitation':
+          result.probOfPrecipitation = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int;
+          break;
+      }
+    }
+
+    return result.build();
+  }
+}
+
 class _$TimeSeries extends TimeSeries {
   @override
   final String time;

@@ -19,8 +19,12 @@ void main() {
 
     final res = await http.get(url, headers: requestHeaders);
     if (res.statusCode == 200) {
-      final test = await parseHourlyData(res.body);
-      expect(test, isNotNull);
+      final timeSeriesList = await parseHourlyData(res.body);
+      expect(timeSeriesList, isNotNull);
+      if (timeSeriesList.isNotEmpty) {
+        deserializeHourlyData(timeSeriesList);
+      }
+      
     }
   });
 }
