@@ -19,9 +19,10 @@ dependencies:
 dev_dependencies:
   build_runner: ^1.0.0
   built_value_generator: ^7.0.9
-  test: ^1.9.4
   flutter_test:
     sdk: flutter
 
 flutter:
+  assets:
+    - assets/api_keys.json
   uses-material-design: true

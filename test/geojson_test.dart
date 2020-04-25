@@ -1,16 +1,22 @@
+import 'package:drizzle_app/src/apiKeys.dart';
 import 'package:drizzle_app/src/timeSeries.dart';
-import 'package:test/test.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
-import 'package:geojson/geojson.dart';
+import 'dart:convert' as json;
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   test("met office http get hourly forecast and parse", () async {
-    final clientId = '93a25d7a-1d1c-4f00-a15d-84687f09da70';
-    final clientSecret = 'V3bB8xL7wF8uS7aL6mF8jP5jF3kP2kG1gS5mH7pP2bV4bY0fJ7';
+    final _credentials = await loadAPIKeys();
+    final _clientId = _credentials['client-id'];
+    final _clientSecret = _credentials['client-secret'];
+
     final Map<String, String> requestHeaders = {
       'accept': 'application/json',
-      'x-ibm-client-secret': clientSecret,
-      'x-ibm-client-id': clientId
+      'x-ibm-client-secret': _clientSecret,
+      'x-ibm-client-id': _clientId
     };
     final lat = '51.454514';
     final long = '-2.587910';
@@ -24,7 +30,6 @@ void main() {
       if (timeSeriesList.isNotEmpty) {
         deserializeHourlyData(timeSeriesList);
       }
-      
     }
   });
 }
