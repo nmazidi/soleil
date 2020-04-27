@@ -86,7 +86,7 @@ Future<List> parseHourlyData(String data) async {
       .value;
 }
 
-void deserializeHourlyData(List data) {
-  data.map(
-      (a) => standardSerializers.deserializeWith(TimeSeries.serializer, a));
+List<TimeSeries> deserializeHourlyData(List data) {
+  return data.map(
+      (a) => standardSerializers.deserializeWith(TimeSeries.serializer, a)).toList();
 }
