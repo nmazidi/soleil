@@ -1,12 +1,13 @@
 import 'package:drizzle_app/src/apiKeys.dart';
 import 'package:drizzle_app/src/timeSeries.dart';
-import 'package:flutter/services.dart';
+import 'package:drizzle_app/src/weatherData_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert' as json;
+import 'dart:io' as io;
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+  io.HttpOverrides.global  = null;
 
   test("met office http get hourly forecast and parse", () async {
     final _credentials = await loadAPIKeys();
@@ -15,8 +16,8 @@ void main() {
 
     final Map<String, String> requestHeaders = {
       'accept': 'application/json',
-      'x-ibm-client-secret': _clientSecret,
-      'x-ibm-client-id': _clientId
+      'x-ibm-client-id': _clientId,
+      'x-ibm-client-secret': _clientSecret
     };
     final lat = '51.454514';
     final long = '-2.587910';
@@ -31,5 +32,12 @@ void main() {
         deserializeHourlyData(timeSeriesList);
       }
     }
+  });
+
+  test("bloc data serialization test", () async {
+    final WeatherDataBloc bloc = WeatherDataBloc();
+    List<double> testCoords = [51.454514, -2.587910];
+    bloc.coordinates.add(testCoords);
+    expect(await bloc.timeSeriesList.first, isNotEmpty);
   });
 }
