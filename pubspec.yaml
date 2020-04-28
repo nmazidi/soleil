@@ -15,6 +15,7 @@ dependencies:
   geojson: ^0.9.1
   rxdart: ^0.24.0
   cupertino_icons: ^0.1.2
+  shared_preferences: ^0.5.7
 
 dev_dependencies:
   build_runner: ^1.0.0
