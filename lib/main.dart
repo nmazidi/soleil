@@ -25,7 +25,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Drizzle',
       theme: ThemeData(
         brightness: Brightness.dark,
         accentColor: Color(0xFF1EB980),
@@ -47,11 +46,17 @@ class _SplashScreenState extends State<SplashScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool _defaultCoordsSet = (prefs.getBool('default_coords_set') ?? false);
     if (_defaultCoordsSet) {
+      final _location = await Geocoder.local.findAddressesFromCoordinates(
+          Coordinates(
+              prefs.getDouble('default_lat'), prefs.getDouble('default_long')));
       Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => Home(title: 'Drizzle', bloc: widget.bloc)));
+          builder: (context) => Home(
+                bloc: widget.bloc,
+                location: _location.first,
+              )));
     } else {
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => FirstTimeIntro(bloc: widget.bloc)));
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => FirstTimeIntro(bloc: widget.bloc)));
     }
   }
 
@@ -106,16 +111,12 @@ class _FirstTimeIntroState extends State<FirstTimeIntro> {
               final addresses =
                   await Geocoder.local.findAddressesFromQuery(query);
               final coordinates = addresses.first.coordinates;
-              final perfs = await SharedPreferences.getInstance();
-              perfs.setDouble('default_lat', coordinates.latitude);
-              perfs.setDouble('default_long', coordinates.longitude);
-              perfs.setBool('default_coords_set', true);
-              widget.bloc.coordinates
-                  .add([coordinates.latitude, coordinates.longitude]);
-              Navigator.of(context).pushReplacement(new MaterialPageRoute(
-                  builder: (context) => new Home(
+              widget.bloc.saveDefaultLocation(coordinates);
+              widget.bloc.coordinates.add(coordinates);
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (context) => Home(
                         bloc: widget.bloc,
-                        title: addresses.first.featureName,
+                        location: addresses.first,
                       )));
             } catch (e) {
               await showDialog<void>(
@@ -144,13 +145,9 @@ class _FirstTimeIntroState extends State<FirstTimeIntro> {
 
 class Home extends StatefulWidget {
   final WeatherDataBloc bloc;
-  final String title;
+  final Address location;
 
-  Home({
-    Key key,
-    this.title,
-    this.bloc,
-  }) : super(key: key);
+  Home({Key key, this.bloc, this.location}) : super(key: key);
 
   @override
   _HomeState createState() => _HomeState();
@@ -161,7 +158,8 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title:
+            Text('${widget.location.featureName}, ${widget.location.locality}'),
         leading: Icon(Icons.cloud),
       ),
       body: StreamBuilder<List<TimeSeries>>(

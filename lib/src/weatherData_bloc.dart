@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:geocoder/geocoder.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,10 +9,10 @@ import 'apiKeys.dart';
 
 class WeatherDataBloc {
   final _timeSeriesListSubject = BehaviorSubject<List<TimeSeries>>();
-  final _coordinatesController = StreamController<List<double>>();
+  final _coordinatesController = StreamController<Coordinates>();
 
   Stream<List<TimeSeries>> get timeSeriesList => _timeSeriesListSubject.stream;
-  Sink<List<double>> get coordinates => _coordinatesController.sink;
+  Sink<Coordinates> get coordinates => _coordinatesController.sink;
 
   // API keys and URL
   static String _clientID, _clientSecret;
@@ -29,7 +30,7 @@ class WeatherDataBloc {
     SharedPreferences.getInstance().then((prefs) {
       if (prefs.getBool('default_coords_set') ?? false) {
         coordinates.add(
-            [prefs.getDouble('default_lat'), prefs.getDouble('default_long')]);
+            Coordinates(prefs.getDouble('default_lat'), prefs.getDouble('default_long')));
       }
     });
     // Listen to a change to the requested coordinates and execute
@@ -38,14 +39,14 @@ class WeatherDataBloc {
     });
   }
 
-  Future<void> _getWeatherData(List<double> coordinates) async {
+  Future<void> _getWeatherData(Coordinates coordinates) async {
     final Map<String, String> requestHeaders = {
       'accept': 'application/json',
       'x-ibm-client-id': _clientID,
       'x-ibm-client-secret': _clientSecret
     };
     final _url =
-        '${_baseUrl}latitude=${coordinates[0]}&longitude=${coordinates[1]}';
+        '${_baseUrl}latitude=${coordinates.latitude}&longitude=${coordinates.longitude}';
     final res = await http.get(_url, headers: requestHeaders);
     if (res.statusCode == 200) {
       final timeSeriesList = await parseHourlyData(res.body);
@@ -58,10 +59,10 @@ class WeatherDataBloc {
     }
   }
 
-  Future<void> saveDefaultLocation(List<double> coordinates) async {
+  Future<void> saveDefaultLocation(Coordinates coordinates) async {
     final perfs = await SharedPreferences.getInstance();
-    perfs.setDouble('default_lat', coordinates[0]);
-    perfs.setDouble('default_long', coordinates[1]);
+    perfs.setDouble('default_lat', coordinates.latitude);
+    perfs.setDouble('default_long', coordinates.longitude);
     perfs.setBool('default_coords_set', true);
   }
 
