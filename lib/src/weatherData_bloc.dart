@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:rxdart/rxdart.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'timeSeries.dart';
 import 'apiKeys.dart';
 
@@ -23,8 +24,12 @@ class WeatherDataBloc {
       _clientID = credentials['client-id'];
       _clientSecret = credentials['client-secret'];
     });
-    // HashMap to store cached data in
-    _cachedData = HashMap<int, TimeSeries>();
+
+    // Get default coordinates from shared preferences on disk
+    SharedPreferences.getInstance().then((prefs) {
+      coordinates.add(
+          [prefs.getDouble('default_lat'), prefs.getDouble('default_long')]);
+    });
     // Listen to a change to the requested coordinates and execute
     _coordinatesController.stream.listen((coordinates) async {
       _getWeatherData(coordinates);
@@ -37,10 +42,9 @@ class WeatherDataBloc {
       'x-ibm-client-id': _clientID,
       'x-ibm-client-secret': _clientSecret
     };
-    final _url = '${_baseUrl}latitude=${coordinates[0]}&longitude=${coordinates[1]}';
-    final res = await http.get(
-        _url,
-        headers: requestHeaders);
+    final _url =
+        '${_baseUrl}latitude=${coordinates[0]}&longitude=${coordinates[1]}';
+    final res = await http.get(_url, headers: requestHeaders);
     if (res.statusCode == 200) {
       final timeSeriesList = await parseHourlyData(res.body);
       if (timeSeriesList.isNotEmpty) {
@@ -50,5 +54,15 @@ class WeatherDataBloc {
     } else {
       throw HttpException(res.body);
     }
+  }
+
+  Future<void> saveDefaultLocation(List<double> coordinates) async {
+    final perfs = await SharedPreferences.getInstance();
+    perfs.setDouble('default_lat', coordinates[0]);
+    perfs.setDouble('default_long', coordinates[1]);
+  }
+  
+  void close() {
+    _coordinatesController.close();
   }
 }
