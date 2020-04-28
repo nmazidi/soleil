@@ -112,7 +112,6 @@ class _FirstTimeIntroState extends State<FirstTimeIntro> {
                   await Geocoder.local.findAddressesFromQuery(query);
               final coordinates = addresses.first.coordinates;
               widget.bloc.saveDefaultLocation(coordinates);
-              widget.bloc.coordinates.add(coordinates);
               Navigator.of(context).pushReplacement(MaterialPageRoute(
                   builder: (context) => Home(
                         bloc: widget.bloc,

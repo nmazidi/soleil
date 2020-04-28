@@ -64,6 +64,7 @@ class WeatherDataBloc {
     perfs.setDouble('default_lat', coordinates.latitude);
     perfs.setDouble('default_long', coordinates.longitude);
     perfs.setBool('default_coords_set', true);
+    this.coordinates.add(coordinates);
   }
 
   void close() {
