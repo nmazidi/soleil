@@ -25,6 +25,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Drizzle',
       theme: ThemeData(primarySwatch: Colors.blue),
+      darkTheme: ThemeData(brightness: Brightness.dark),
+      themeMode: ThemeMode.dark,
       home: MyHomePage(
         title: 'Drizzle',
         bloc: bloc,
