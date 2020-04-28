@@ -15,39 +15,50 @@ abstract class TimeSeries implements Built<TimeSeries, TimeSeriesBuilder> {
   double get screenTemperature;
 
   /// Maximum Screen Air Temperature Over Previous Hour. (degrees Celsius)
+  @nullable
   double get maxScreenAirTemp;
 
   /// Minimum Screen Air Temperature Over Previous Hour. (degrees Celsius)
+  @nullable
   double get minScreenAirTemp;
 
   /// The temperature at which the air can no longer "hold" all of the
   /// water vapor which is mixed with it. (<= air temperature) (degrees Celsius)
+  @nullable
   double get screenDewPointTemperature;
 
   /// Takes into account wind speeds and humidity to assess how the human
   /// body actually feels temperature. (degrees Celsius)
+  @nullable
   double get feelsLikeTemperature;
 
   /// Wind Speed 10m above ground. (m/s)
+  @nullable
   double get windSpeed10m;
 
   /// Wind from direction 10m above ground. (degrees)
+  @nullable
   double get windDirectionFrom10m;
 
   /// Wind gust speed at 10m above ground. (m/s)
+  @nullable
   double get windGustSpeed10m;
 
   /// Maximum wind gust speed over previous hour at 10m above ground. (m/s)
+  @nullable
   double get max10mWindGust;
 
   /// Visibility in metres.
+  @nullable
   double get visibility;
 
   /// Ratio of the partial pressure of water vapor to the equilibrium
   /// vapor pressure of water at a given temperature. (%)
+  @nullable
   double get screenRelativeHumidity;
 
   /// Mean sea level pressure: the surface pressure reduced to sea level. (Pa)
+  @nullable
   int get mslp;
 
   /// UV index between 1 and 11.
@@ -56,21 +67,27 @@ abstract class TimeSeries implements Built<TimeSeries, TimeSeriesBuilder> {
   /// 6-7	High.
   /// 8-10 Very high.
   /// 11	Extreme.
+  @nullable
   int get uvIndex;
 
   /// See weatherCode.dart. (0-30)
+  @nullable
   int get significantWeatherCode;
 
   /// The rate of precipitation over square footage of the zone. (mm/h)
+  @nullable
   double get precipitationRate;
 
   /// Total precipitation amount over previous hour. (mm)
+  @nullable
   double get totalPrecipAmount;
 
   /// Total amount of snow over the previous hour. (mm)
+  @nullable
   double get totalSnowAmount;
 
   /// Probability of precipitation. (%)
+  @nullable
   int get probOfPrecipitation;
 
   TimeSeries._();

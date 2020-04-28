@@ -23,57 +23,109 @@ class _$TimeSeriesSerializer implements StructuredSerializer<TimeSeries> {
       'screenTemperature',
       serializers.serialize(object.screenTemperature,
           specifiedType: const FullType(double)),
-      'maxScreenAirTemp',
-      serializers.serialize(object.maxScreenAirTemp,
-          specifiedType: const FullType(double)),
-      'minScreenAirTemp',
-      serializers.serialize(object.minScreenAirTemp,
-          specifiedType: const FullType(double)),
-      'screenDewPointTemperature',
-      serializers.serialize(object.screenDewPointTemperature,
-          specifiedType: const FullType(double)),
-      'feelsLikeTemperature',
-      serializers.serialize(object.feelsLikeTemperature,
-          specifiedType: const FullType(double)),
-      'windSpeed10m',
-      serializers.serialize(object.windSpeed10m,
-          specifiedType: const FullType(double)),
-      'windDirectionFrom10m',
-      serializers.serialize(object.windDirectionFrom10m,
-          specifiedType: const FullType(double)),
-      'windGustSpeed10m',
-      serializers.serialize(object.windGustSpeed10m,
-          specifiedType: const FullType(double)),
-      'max10mWindGust',
-      serializers.serialize(object.max10mWindGust,
-          specifiedType: const FullType(double)),
-      'visibility',
-      serializers.serialize(object.visibility,
-          specifiedType: const FullType(double)),
-      'screenRelativeHumidity',
-      serializers.serialize(object.screenRelativeHumidity,
-          specifiedType: const FullType(double)),
-      'mslp',
-      serializers.serialize(object.mslp, specifiedType: const FullType(int)),
-      'uvIndex',
-      serializers.serialize(object.uvIndex, specifiedType: const FullType(int)),
-      'significantWeatherCode',
-      serializers.serialize(object.significantWeatherCode,
-          specifiedType: const FullType(int)),
-      'precipitationRate',
-      serializers.serialize(object.precipitationRate,
-          specifiedType: const FullType(double)),
-      'totalPrecipAmount',
-      serializers.serialize(object.totalPrecipAmount,
-          specifiedType: const FullType(double)),
-      'totalSnowAmount',
-      serializers.serialize(object.totalSnowAmount,
-          specifiedType: const FullType(double)),
-      'probOfPrecipitation',
-      serializers.serialize(object.probOfPrecipitation,
-          specifiedType: const FullType(int)),
     ];
-
+    if (object.maxScreenAirTemp != null) {
+      result
+        ..add('maxScreenAirTemp')
+        ..add(serializers.serialize(object.maxScreenAirTemp,
+            specifiedType: const FullType(double)));
+    }
+    if (object.minScreenAirTemp != null) {
+      result
+        ..add('minScreenAirTemp')
+        ..add(serializers.serialize(object.minScreenAirTemp,
+            specifiedType: const FullType(double)));
+    }
+    if (object.screenDewPointTemperature != null) {
+      result
+        ..add('screenDewPointTemperature')
+        ..add(serializers.serialize(object.screenDewPointTemperature,
+            specifiedType: const FullType(double)));
+    }
+    if (object.feelsLikeTemperature != null) {
+      result
+        ..add('feelsLikeTemperature')
+        ..add(serializers.serialize(object.feelsLikeTemperature,
+            specifiedType: const FullType(double)));
+    }
+    if (object.windSpeed10m != null) {
+      result
+        ..add('windSpeed10m')
+        ..add(serializers.serialize(object.windSpeed10m,
+            specifiedType: const FullType(double)));
+    }
+    if (object.windDirectionFrom10m != null) {
+      result
+        ..add('windDirectionFrom10m')
+        ..add(serializers.serialize(object.windDirectionFrom10m,
+            specifiedType: const FullType(double)));
+    }
+    if (object.windGustSpeed10m != null) {
+      result
+        ..add('windGustSpeed10m')
+        ..add(serializers.serialize(object.windGustSpeed10m,
+            specifiedType: const FullType(double)));
+    }
+    if (object.max10mWindGust != null) {
+      result
+        ..add('max10mWindGust')
+        ..add(serializers.serialize(object.max10mWindGust,
+            specifiedType: const FullType(double)));
+    }
+    if (object.visibility != null) {
+      result
+        ..add('visibility')
+        ..add(serializers.serialize(object.visibility,
+            specifiedType: const FullType(double)));
+    }
+    if (object.screenRelativeHumidity != null) {
+      result
+        ..add('screenRelativeHumidity')
+        ..add(serializers.serialize(object.screenRelativeHumidity,
+            specifiedType: const FullType(double)));
+    }
+    if (object.mslp != null) {
+      result
+        ..add('mslp')
+        ..add(serializers.serialize(object.mslp,
+            specifiedType: const FullType(int)));
+    }
+    if (object.uvIndex != null) {
+      result
+        ..add('uvIndex')
+        ..add(serializers.serialize(object.uvIndex,
+            specifiedType: const FullType(int)));
+    }
+    if (object.significantWeatherCode != null) {
+      result
+        ..add('significantWeatherCode')
+        ..add(serializers.serialize(object.significantWeatherCode,
+            specifiedType: const FullType(int)));
+    }
+    if (object.precipitationRate != null) {
+      result
+        ..add('precipitationRate')
+        ..add(serializers.serialize(object.precipitationRate,
+            specifiedType: const FullType(double)));
+    }
+    if (object.totalPrecipAmount != null) {
+      result
+        ..add('totalPrecipAmount')
+        ..add(serializers.serialize(object.totalPrecipAmount,
+            specifiedType: const FullType(double)));
+    }
+    if (object.totalSnowAmount != null) {
+      result
+        ..add('totalSnowAmount')
+        ..add(serializers.serialize(object.totalSnowAmount,
+            specifiedType: const FullType(double)));
+    }
+    if (object.probOfPrecipitation != null) {
+      result
+        ..add('probOfPrecipitation')
+        ..add(serializers.serialize(object.probOfPrecipitation,
+            specifiedType: const FullType(int)));
+    }
     return result;
   }
 
@@ -240,60 +292,6 @@ class _$TimeSeries extends TimeSeries {
     }
     if (screenTemperature == null) {
       throw new BuiltValueNullFieldError('TimeSeries', 'screenTemperature');
-    }
-    if (maxScreenAirTemp == null) {
-      throw new BuiltValueNullFieldError('TimeSeries', 'maxScreenAirTemp');
-    }
-    if (minScreenAirTemp == null) {
-      throw new BuiltValueNullFieldError('TimeSeries', 'minScreenAirTemp');
-    }
-    if (screenDewPointTemperature == null) {
-      throw new BuiltValueNullFieldError(
-          'TimeSeries', 'screenDewPointTemperature');
-    }
-    if (feelsLikeTemperature == null) {
-      throw new BuiltValueNullFieldError('TimeSeries', 'feelsLikeTemperature');
-    }
-    if (windSpeed10m == null) {
-      throw new BuiltValueNullFieldError('TimeSeries', 'windSpeed10m');
-    }
-    if (windDirectionFrom10m == null) {
-      throw new BuiltValueNullFieldError('TimeSeries', 'windDirectionFrom10m');
-    }
-    if (windGustSpeed10m == null) {
-      throw new BuiltValueNullFieldError('TimeSeries', 'windGustSpeed10m');
-    }
-    if (max10mWindGust == null) {
-      throw new BuiltValueNullFieldError('TimeSeries', 'max10mWindGust');
-    }
-    if (visibility == null) {
-      throw new BuiltValueNullFieldError('TimeSeries', 'visibility');
-    }
-    if (screenRelativeHumidity == null) {
-      throw new BuiltValueNullFieldError(
-          'TimeSeries', 'screenRelativeHumidity');
-    }
-    if (mslp == null) {
-      throw new BuiltValueNullFieldError('TimeSeries', 'mslp');
-    }
-    if (uvIndex == null) {
-      throw new BuiltValueNullFieldError('TimeSeries', 'uvIndex');
-    }
-    if (significantWeatherCode == null) {
-      throw new BuiltValueNullFieldError(
-          'TimeSeries', 'significantWeatherCode');
-    }
-    if (precipitationRate == null) {
-      throw new BuiltValueNullFieldError('TimeSeries', 'precipitationRate');
-    }
-    if (totalPrecipAmount == null) {
-      throw new BuiltValueNullFieldError('TimeSeries', 'totalPrecipAmount');
-    }
-    if (totalSnowAmount == null) {
-      throw new BuiltValueNullFieldError('TimeSeries', 'totalSnowAmount');
-    }
-    if (probOfPrecipitation == null) {
-      throw new BuiltValueNullFieldError('TimeSeries', 'probOfPrecipitation');
     }
   }
 
