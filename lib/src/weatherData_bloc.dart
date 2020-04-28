@@ -45,12 +45,15 @@ class WeatherDataBloc {
       'x-ibm-client-id': _clientID,
       'x-ibm-client-secret': _clientSecret
     };
+    // API http request url.
     final _url =
         '${_baseUrl}latitude=${coordinates.latitude}&longitude=${coordinates.longitude}';
     final res = await http.get(_url, headers: requestHeaders);
     if (res.statusCode == 200) {
+      // Get list of hourly data as geojson.
       final timeSeriesList = await parseHourlyData(res.body);
       if (timeSeriesList.isNotEmpty) {
+        // Deserialise the data into TimeSeries objects.
         final test = deserializeHourlyData(timeSeriesList);
         _timeSeriesListSubject.add(test);
       }
@@ -60,6 +63,7 @@ class WeatherDataBloc {
   }
 
   Future<void> saveDefaultLocation(Coordinates coordinates) async {
+    // Load shared preferences from disk.
     final perfs = await SharedPreferences.getInstance();
     perfs.setDouble('default_lat', coordinates.latitude);
     perfs.setDouble('default_long', coordinates.longitude);
