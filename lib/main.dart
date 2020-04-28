@@ -1,5 +1,4 @@
 import 'dart:collection';
-
 import 'package:drizzle_app/src/timeSeries.dart';
 import 'package:drizzle_app/src/weatherData_bloc.dart';
 import 'package:flutter/material.dart';
@@ -24,9 +23,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Drizzle',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      darkTheme: ThemeData(brightness: Brightness.dark),
-      themeMode: ThemeMode.dark,
+      theme: ThemeData(
+        brightness: Brightness.dark,
+        accentColor: Color(0xFF1EB980),
+      ),
       home: MyHomePage(
         title: 'Drizzle',
         bloc: bloc,
@@ -64,7 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: Icon(Icons.update),
             onPressed: () {
               List<double> testCoords = [51.454514, -2.587910];
-              widget.bloc.coordinates.add(testCoords);
+              widget.bloc.saveDefaultLocation(testCoords);
             }),
       ),
     );

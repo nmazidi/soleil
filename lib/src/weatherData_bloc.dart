@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:collection';
 import 'dart:io';
 import 'package:rxdart/rxdart.dart';
 import 'package:http/http.dart' as http;
@@ -7,15 +6,11 @@ import 'timeSeries.dart';
 import 'apiKeys.dart';
 
 class WeatherDataBloc {
-  HashMap<int, TimeSeries> _cachedData;
-
   final _timeSeriesListSubject = BehaviorSubject<List<TimeSeries>>();
   final _coordinatesController = StreamController<List<double>>();
 
   Stream<List<TimeSeries>> get timeSeriesList => _timeSeriesListSubject.stream;
   Sink<List<double>> get coordinates => _coordinatesController.sink;
-
-  var _timeSeriesList = <TimeSeries>[];
 
   // API keys and URL
   static String _clientID, _clientSecret;
