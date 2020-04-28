@@ -27,8 +27,10 @@ class WeatherDataBloc {
 
     // Get default coordinates from shared preferences on disk
     SharedPreferences.getInstance().then((prefs) {
-      coordinates.add(
-          [prefs.getDouble('default_lat'), prefs.getDouble('default_long')]);
+      if (prefs.getBool('default_coords_set') ?? false) {
+        coordinates.add(
+            [prefs.getDouble('default_lat'), prefs.getDouble('default_long')]);
+      }
     });
     // Listen to a change to the requested coordinates and execute
     _coordinatesController.stream.listen((coordinates) async {
@@ -60,8 +62,9 @@ class WeatherDataBloc {
     final perfs = await SharedPreferences.getInstance();
     perfs.setDouble('default_lat', coordinates[0]);
     perfs.setDouble('default_long', coordinates[1]);
+    perfs.setBool('default_coords_set', true);
   }
-  
+
   void close() {
     _coordinatesController.close();
   }

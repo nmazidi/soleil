@@ -1,7 +1,10 @@
+import 'dart:async';
 import 'dart:collection';
 import 'package:drizzle_app/src/timeSeries.dart';
 import 'package:drizzle_app/src/weatherData_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoder/geocoder.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io' as io;
 
 void main() {
@@ -27,25 +30,133 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.dark,
         accentColor: Color(0xFF1EB980),
       ),
-      home: MyHomePage(
-        title: 'Drizzle',
-        bloc: bloc,
+      home: SplashScreen(bloc: bloc),
+    );
+  }
+}
+
+class SplashScreen extends StatefulWidget {
+  final WeatherDataBloc bloc;
+  SplashScreen({Key key, this.bloc}) : super(key: key);
+  @override
+  _SplashScreenState createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  Future checkCoordsSet() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool _defaultCoordsSet = (prefs.getBool('default_coords_set') ?? false);
+    if (_defaultCoordsSet) {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => Home(title: 'Drizzle', bloc: widget.bloc)));
+    } else {
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => FirstTimeIntro(bloc: widget.bloc)));
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    Timer(Duration(milliseconds: 200), () {
+      checkCoordsSet();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Icon(Icons.cloud),
       ),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
+class FirstTimeIntro extends StatefulWidget {
+  final WeatherDataBloc bloc;
+  FirstTimeIntro({Key key, this.bloc}) : super(key: key);
+  @override
+  _FirstTimeIntroState createState() => _FirstTimeIntroState();
+}
+
+class _FirstTimeIntroState extends State<FirstTimeIntro> {
+  TextEditingController _controller;
+
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+  }
+
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: TextField(
+          decoration: InputDecoration(
+              border: OutlineInputBorder(), labelText: 'Search for a location'),
+          controller: _controller,
+          onSubmitted: (String query) async {
+            try {
+              final addresses =
+                  await Geocoder.local.findAddressesFromQuery(query);
+              final coordinates = addresses.first.coordinates;
+              final perfs = await SharedPreferences.getInstance();
+              perfs.setDouble('default_lat', coordinates.latitude);
+              perfs.setDouble('default_long', coordinates.longitude);
+              perfs.setBool('default_coords_set', true);
+              widget.bloc.coordinates
+                  .add([coordinates.latitude, coordinates.longitude]);
+              Navigator.of(context).pushReplacement(new MaterialPageRoute(
+                  builder: (context) => new Home(
+                        bloc: widget.bloc,
+                        title: addresses.first.featureName,
+                      )));
+            } catch (e) {
+              await showDialog<void>(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text('Error'),
+                      content: Text('Please try again.'),
+                      actions: <Widget>[
+                        FlatButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    );
+                  });
+            }
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class Home extends StatefulWidget {
   final WeatherDataBloc bloc;
   final String title;
 
-  MyHomePage({Key key, this.title, this.bloc}) : super(key: key);
+  Home({
+    Key key,
+    this.title,
+    this.bloc,
+  }) : super(key: key);
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _HomeState createState() => _HomeState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,11 +172,12 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       bottomNavigationBar: BottomAppBar(
         child: IconButton(
-            icon: Icon(Icons.update),
-            onPressed: () {
-              List<double> testCoords = [51.454514, -2.587910];
-              widget.bloc.saveDefaultLocation(testCoords);
-            }),
+          icon: Icon(Icons.update),
+          onPressed: () async {
+            final perfs = await SharedPreferences.getInstance();
+            perfs.clear();
+          },
+        ),
       ),
     );
   }
