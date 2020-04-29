@@ -34,11 +34,11 @@ class WeatherDataBloc {
     });
     // Listen to a change to the requested coordinates and execute
     _coordinatesController.stream.listen((coordinates) async {
-      _getWeatherData(coordinates);
+      _updateWeatherData(coordinates);
     });
   }
 
-  Future<void> _getWeatherData(Coordinates coordinates) async {
+  Future<void> _updateWeatherData(Coordinates coordinates) async {
     // API http request url.
     final _url =
         '${_baseUrl}latitude=${coordinates.latitude}&longitude=${coordinates.longitude}';
@@ -47,9 +47,8 @@ class WeatherDataBloc {
       // Get list of hourly data as geojson.
       final timeSeriesList = await parseHourlyData(res.body);
       if (timeSeriesList.isNotEmpty) {
-        // Deserialise the data into TimeSeries objects.
-        final test = deserializeHourlyData(timeSeriesList);
-        _timeSeriesListSubject.add(test);
+        // Deserialise the data into TimeSeries objects and add to BehaviourSubject.
+        _timeSeriesListSubject.add(deserializeHourlyData(timeSeriesList));
       }
     } else {
       throw HttpException(res.body);
