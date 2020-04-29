@@ -8,29 +8,25 @@ import 'dart:io' as io;
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  io.HttpOverrides.global  = null;
+  io.HttpOverrides.global = null;
 
   test("met office http get hourly forecast and parse", () async {
-    final _credentials = await loadAPIKeys();
-    final _clientId = _credentials['client-id'];
-    final _clientSecret = _credentials['client-secret'];
-
-    final Map<String, String> requestHeaders = {
-      'accept': 'application/json',
-      'x-ibm-client-id': _clientId,
-      'x-ibm-client-secret': _clientSecret
-    };
+    Map<String, String> _credentials;
+    await loadAPIKeys().then((creds) {
+      _credentials = Map.from(creds['http-request-headers']);
+    });
     final lat = '51.454514';
     final long = '-2.587910';
     final url =
         'https://api-metoffice.apiconnect.ibmcloud.com/metoffice/production/v0/forecasts/point/hourly?latitude=$lat&longitude=$long';
 
-    final res = await http.get(url, headers: requestHeaders);
+    final res = await http.get(url, headers: _credentials);
     if (res.statusCode == 200) {
       final timeSeriesList = await parseHourlyData(res.body);
-      expect(timeSeriesList, isNotNull);
+      expect(timeSeriesList, isNotEmpty);
       if (timeSeriesList.isNotEmpty) {
-        deserializeHourlyData(timeSeriesList);
+        final _deserializedData = deserializeHourlyData(timeSeriesList);
+        expect(_deserializedData, isNotNull);
       }
     }
   });
