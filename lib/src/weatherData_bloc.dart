@@ -15,15 +15,14 @@ class WeatherDataBloc {
   Sink<Coordinates> get coordinates => _coordinatesController.sink;
 
   // API keys and URL
-  static String _clientID, _clientSecret;
+  static Map<String,String> _credentials;
   static const _baseUrl =
       'https://api-metoffice.apiconnect.ibmcloud.com/metoffice/production/v0/forecasts/point/hourly?';
 
   WeatherDataBloc() {
     // Load API keys from secret json file that isn't included in version control
     loadAPIKeys().then((credentials) {
-      _clientID = credentials['client-id'];
-      _clientSecret = credentials['client-secret'];
+      _credentials = Map.from(credentials['http-request-headers']);
     });
 
     // Get default coordinates from shared preferences on disk
@@ -40,15 +39,10 @@ class WeatherDataBloc {
   }
 
   Future<void> _getWeatherData(Coordinates coordinates) async {
-    final Map<String, String> requestHeaders = {
-      'accept': 'application/json',
-      'x-ibm-client-id': _clientID,
-      'x-ibm-client-secret': _clientSecret
-    };
     // API http request url.
     final _url =
         '${_baseUrl}latitude=${coordinates.latitude}&longitude=${coordinates.longitude}';
-    final res = await http.get(_url, headers: requestHeaders);
+    final res = await http.get(_url, headers: _credentials);
     if (res.statusCode == 200) {
       // Get list of hourly data as geojson.
       final timeSeriesList = await parseHourlyData(res.body);
