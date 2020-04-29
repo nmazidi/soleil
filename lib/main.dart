@@ -191,7 +191,7 @@ class _HomeState extends State<Home> {
 
   Widget _buildItem(TimeSeries timeSeries) {
     return Padding(
-      key: Key(timeSeries.time),
+      key: Key(timeSeries.time.toString()),
       padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 12.0),
       child: ExpansionTile(
         title: Text(timeSeries.time ?? '[null]'),

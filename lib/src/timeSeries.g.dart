@@ -19,7 +19,8 @@ class _$TimeSeriesSerializer implements StructuredSerializer<TimeSeries> {
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'time',
-      serializers.serialize(object.time, specifiedType: const FullType(String)),
+      serializers.serialize(object.time,
+          specifiedType: const FullType(DateTime)),
       'screenTemperature',
       serializers.serialize(object.screenTemperature,
           specifiedType: const FullType(double)),
@@ -142,7 +143,7 @@ class _$TimeSeriesSerializer implements StructuredSerializer<TimeSeries> {
       switch (key) {
         case 'time':
           result.time = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(DateTime)) as DateTime;
           break;
         case 'screenTemperature':
           result.screenTemperature = serializers.deserialize(value,
@@ -225,7 +226,7 @@ class _$TimeSeriesSerializer implements StructuredSerializer<TimeSeries> {
 
 class _$TimeSeries extends TimeSeries {
   @override
-  final String time;
+  final DateTime time;
   @override
   final double screenTemperature;
   @override
@@ -406,9 +407,9 @@ class _$TimeSeries extends TimeSeries {
 class TimeSeriesBuilder implements Builder<TimeSeries, TimeSeriesBuilder> {
   _$TimeSeries _$v;
 
-  String _time;
-  String get time => _$this._time;
-  set time(String time) => _$this._time = time;
+  DateTime _time;
+  DateTime get time => _$this._time;
+  set time(DateTime time) => _$this._time = time;
 
   double _screenTemperature;
   double get screenTemperature => _$this._screenTemperature;

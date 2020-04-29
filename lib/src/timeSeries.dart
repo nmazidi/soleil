@@ -9,7 +9,7 @@ abstract class TimeSeries implements Built<TimeSeries, TimeSeriesBuilder> {
   static Serializer<TimeSeries> get serializer => _$timeSeriesSerializer;
 
   /// The timestamp of the given forecast in yyyy-mm-ddThh:mmZ.
-  String get time;
+  DateTime get time;
 
   /// The air temperature as measured on a Stevenson screen. (degrees Celsius)
   double get screenTemperature;
@@ -103,6 +103,7 @@ Future<List> parseHourlyData(String data) async {
 }
 
 List<TimeSeries> deserializeHourlyData(List data) {
-  return data.map(
-      (a) => standardSerializers.deserializeWith(TimeSeries.serializer, a)).toList();
+  return data
+      .map((a) => standardSerializers.deserializeWith(TimeSeries.serializer, a))
+      .toList();
 }
