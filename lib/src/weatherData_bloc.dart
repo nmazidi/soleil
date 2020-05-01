@@ -15,7 +15,7 @@ class WeatherDataBloc {
   Sink<Coordinates> get coordinates => _coordinatesController.sink;
 
   // API keys and URL
-  static Map<String,String> _credentials;
+  static Map<String, String> _credentials;
   static const _baseUrl =
       'https://api-metoffice.apiconnect.ibmcloud.com/metoffice/production/v0/forecasts/point/hourly?';
 
@@ -28,14 +28,13 @@ class WeatherDataBloc {
     // Get default coordinates from shared preferences on disk
     SharedPreferences.getInstance().then((prefs) {
       if (prefs.getBool('default_coords_set') ?? false) {
-        coordinates.add(
-            Coordinates(prefs.getDouble('default_lat'), prefs.getDouble('default_long')));
+        coordinates.add(Coordinates(
+            prefs.getDouble('default_lat'), prefs.getDouble('default_long')));
       }
     });
     // Listen to a change to the requested coordinates and execute
-    _coordinatesController.stream.listen((coordinates) async {
-      _updateWeatherData(coordinates);
-    });
+    _coordinatesController.stream
+        .listen((coordinates) async => _updateWeatherData(coordinates));
   }
 
   Future<void> _updateWeatherData(Coordinates coordinates) async {
