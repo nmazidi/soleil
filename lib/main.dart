@@ -5,6 +5,7 @@ import 'package:drizzle_app/src/weatherData_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
 
 void main() {
   // Waits for widgets to initialise before getting any assets.
@@ -174,8 +175,14 @@ class _HomeState extends State<Home> {
       body: StreamBuilder<List<TimeSeries>>(
         stream: widget.bloc.timeSeriesList,
         initialData: UnmodifiableListView<TimeSeries>([]),
-        builder: (context, snapshot) =>
-            ListView(children: snapshot.data.map(_buildItem).toList()),
+        builder: (context, snapshot) => ListView.builder(
+          itemCount: snapshot.data.last.time.day,
+          itemBuilder: (context, int index) {
+            return _buildItem(snapshot.data
+                .where((ts) => (ts.time.day == DateTime.now().day + index))
+                .toList());
+          },
+        ),
       ),
       bottomNavigationBar: BottomAppBar(
         child: IconButton(
@@ -189,21 +196,40 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget _buildItem(TimeSeries timeSeries) {
+  Widget _buildItem(List<TimeSeries> timeSeriesList) {
     return Padding(
-      key: Key(timeSeries.time.toString()),
+      key: Key(timeSeriesList[0].time.toString()),
       padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 12.0),
       child: ExpansionTile(
-        title: Text(timeSeries.time ?? '[null]'),
+        title: Text(DateFormat('EEEE').format(timeSeriesList[0].time)),
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text('Temperature: ${timeSeries.screenTemperature} °C'),
-                Text('Feels like: ${timeSeries.feelsLikeTemperature} °C'),
-              ],
+          Container(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 16, bottom: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: (timeSeriesList
+                          .where((ts) => (ts.time.hour % 2 == 0))
+                          .map((ts) =>
+                              Text(DateFormat('Hm').format(ts.time).toString()))
+                          .toList()),
+                    ),
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: (timeSeriesList
+                        .where((ts) => (ts.time.hour % 2 == 0))
+                        .map((ts) => Text(
+                            '${ts.feelsLikeTemperature.round().toString()}°C'))
+                        .toList()),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
