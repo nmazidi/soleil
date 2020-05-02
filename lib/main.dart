@@ -5,7 +5,6 @@ import 'package:drizzle_app/src/weatherData_bloc.dart';
 import 'package:drizzle_app/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   // Waits for widgets to initialise before getting any assets.
@@ -53,39 +52,39 @@ class _HomeState extends State<Home> {
         title:
             Text('${widget.location.featureName}, ${widget.location.locality}'),
         leading: Icon(Icons.cloud),
+        centerTitle: true,
       ),
-      body: StreamBuilder<List<TimeSeries>>(
-          stream: widget.bloc.timeSeriesList,
-          initialData: UnmodifiableListView<TimeSeries>([]),
-          builder: (context, snapshot) {
-            if (snapshot.data.isEmpty) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            return ListView.builder(
-              itemCount: (snapshot.data.last.time.day - DateTime.now().day) + 1,
-              itemBuilder: (context, int index) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 4.0, vertical: 12.0),
-                  child: DailyExpansionTile(
-                      data: snapshot.data
-                          .where((ts) =>
-                              (ts.time.day == DateTime.now().day + index))
-                          .toList()),
-                );
-              },
-            );
-          }),
-      bottomNavigationBar: BottomAppBar(
-        child: IconButton(
-          icon: Icon(Icons.clear),
-          onPressed: () async {
-            final perfs = await SharedPreferences.getInstance();
-            perfs.clear();
-          },
-        ),
+      body: Column(
+        children: [
+          Container(
+            padding: EdgeInsets.all(5),
+            child: Card(
+              elevation: 5,
+              child: StreamBuilder<List<TimeSeries>>(
+                  stream: widget.bloc.timeSeriesList,
+                  initialData: UnmodifiableListView<TimeSeries>([]),
+                  builder: (context, snapshot) {
+                    if (snapshot.data.isEmpty) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    return ListView.builder(
+                      itemCount:
+                          (snapshot.data.last.time.day - DateTime.now().day) + 1,
+                      itemBuilder: (context, int index) {
+                        return DailyExpansionTile(
+                            data: snapshot.data
+                                .where((ts) =>
+                                    (ts.time.day == DateTime.now().day + index))
+                                .toList());
+                      },
+                      shrinkWrap: true,
+                    );
+                  }),
+            ),
+          ),
+        ],
       ),
     );
   }

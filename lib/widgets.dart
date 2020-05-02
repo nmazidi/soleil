@@ -1,6 +1,8 @@
 import 'package:drizzle_app/src/timeSeries.dart';
+import 'package:drizzle_app/src/weatherCode.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:weather_icons/weather_icons.dart';
 
 class DailyExpansionTile extends StatelessWidget {
   final List<TimeSeries> data;
@@ -9,9 +11,47 @@ class DailyExpansionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
-      title: data.first.time.day == DateTime.now().day
-          ? Text('Today')
-          : Text(DateFormat('EEEE').format(data.first.time) ?? '[null]'),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Container(
+            width: 70.0,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                data.first.time.day == DateTime.now().day
+                    ? Text('TODAY')
+                    : Text(DateFormat('EEE')
+                        .format(data.first.time)
+                        .toUpperCase()),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Icon(
+                      WeatherIcons.raindrop,
+                      color: Colors.lightBlue,
+                      size: 15.0,
+                    ),
+                    Text(
+                      '${data.first.probOfPrecipitation.toString()}%',
+                      style: TextStyle(color: Colors.lightBlue),
+                      textAlign: TextAlign.left,
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+          Container(
+            height: 50.0,
+            child: Icon(
+              WeatherIcons.fromString(
+                  weatherCode(data.first.significantWeatherCode)),
+            ),
+          )
+        ],
+      ),
       children: [DailyExpandedData(data: data)],
     );
   }
