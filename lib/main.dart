@@ -173,20 +173,26 @@ class _HomeState extends State<Home> {
         leading: Icon(Icons.cloud),
       ),
       body: StreamBuilder<List<TimeSeries>>(
-        stream: widget.bloc.timeSeriesList,
-        initialData: UnmodifiableListView<TimeSeries>([]),
-        builder: (context, snapshot) => ListView.builder(
-          itemCount: snapshot.data.last.time.day,
-          itemBuilder: (context, int index) {
-            return _buildItem(snapshot.data
-                .where((ts) => (ts.time.day == DateTime.now().day + index))
-                .toList());
-          },
-        ),
-      ),
+          stream: widget.bloc.timeSeriesList,
+          initialData: UnmodifiableListView<TimeSeries>([]),
+          builder: (context, snapshot) {
+            if (snapshot.data.isEmpty) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            return ListView.builder(
+              itemCount: (snapshot.data.last.time.day - DateTime.now().day) + 1,
+              itemBuilder: (context, int index) {
+                return _buildItem(snapshot.data
+                    .where((ts) => (ts.time.day == DateTime.now().day + index))
+                    .toList());
+              },
+            );
+          }),
       bottomNavigationBar: BottomAppBar(
         child: IconButton(
-          icon: Icon(Icons.update),
+          icon: Icon(Icons.clear),
           onPressed: () async {
             final perfs = await SharedPreferences.getInstance();
             perfs.clear();
@@ -198,10 +204,11 @@ class _HomeState extends State<Home> {
 
   Widget _buildItem(List<TimeSeries> timeSeriesList) {
     return Padding(
-      key: Key(timeSeriesList[0].time.toString()),
+      key: Key(timeSeriesList.first.time.toString()),
       padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 12.0),
       child: ExpansionTile(
-        title: Text(DateFormat('EEEE').format(timeSeriesList[0].time)),
+        title: Text(
+            DateFormat('EEEE').format(timeSeriesList.first.time) ?? '[null]'),
         children: [
           Container(
             child: Padding(
