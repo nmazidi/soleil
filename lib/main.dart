@@ -207,8 +207,10 @@ class _HomeState extends State<Home> {
       key: Key(timeSeriesList.first.time.toString()),
       padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 12.0),
       child: ExpansionTile(
-        title: Text(
-            DateFormat('EEEE').format(timeSeriesList.first.time) ?? '[null]'),
+        title: timeSeriesList.first.time.day == DateTime.now().day
+            ? Text('Today')
+            : Text(DateFormat('EEEE').format(timeSeriesList.first.time) ??
+                '[null]'),
         children: [
           Container(
             child: Padding(
