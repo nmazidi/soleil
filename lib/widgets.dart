@@ -47,7 +47,7 @@ class DailyExpansionTile extends StatelessWidget {
             height: 50.0,
             child: Icon(
               WeatherIcons.fromString(
-                  weatherCode(data.first.significantWeatherCode)),
+                  weatherCode(data.first.significantWeatherCode), fallback: WeatherIcons.day_sunny),
             ),
           )
         ],

@@ -50,7 +50,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         title:
-            Text('${widget.location.featureName}, ${widget.location.locality}'),
+            Text('${widget.location.subAdminArea}, ${widget.location.countryCode}'),
         leading: Icon(Icons.cloud),
         centerTitle: true,
       ),
