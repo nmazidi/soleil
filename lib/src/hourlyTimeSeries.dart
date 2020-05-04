@@ -5,8 +5,10 @@ import 'serializers.dart';
 
 part 'hourlyTimeSeries.g.dart';
 
-abstract class HourlyTimeSeries implements Built<HourlyTimeSeries, HourlyTimeSeriesBuilder> {
-  static Serializer<HourlyTimeSeries> get serializer => _$hourlyTimeSeriesSerializer;
+abstract class HourlyTimeSeries
+    implements Built<HourlyTimeSeries, HourlyTimeSeriesBuilder> {
+  static Serializer<HourlyTimeSeries> get serializer =>
+      _$hourlyTimeSeriesSerializer;
 
   /// The timestamp of the given forecast in yyyy-mm-ddThh:mmZ.
   DateTime get time;
@@ -91,7 +93,8 @@ abstract class HourlyTimeSeries implements Built<HourlyTimeSeries, HourlyTimeSer
   int get probOfPrecipitation;
 
   HourlyTimeSeries._();
-  factory HourlyTimeSeries([void Function(HourlyTimeSeriesBuilder) updates]) = _$HourlyTimeSeries;
+  factory HourlyTimeSeries([void Function(HourlyTimeSeriesBuilder) updates]) =
+      _$HourlyTimeSeries;
 }
 
 Future<List> parseHourlyData(String data) async {
@@ -104,6 +107,7 @@ Future<List> parseHourlyData(String data) async {
 
 List<HourlyTimeSeries> deserializeHourlyData(List data) {
   return data
-      .map((a) => standardSerializers.deserializeWith(HourlyTimeSeries.serializer, a))
+      .map((a) =>
+          standardSerializers.deserializeWith(HourlyTimeSeries.serializer, a))
       .toList();
 }
