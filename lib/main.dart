@@ -1,8 +1,8 @@
 import 'dart:collection';
-import 'package:drizzle_app/splash.dart';
-import 'package:drizzle_app/src/hourlyTimeSeries.dart';
-import 'package:drizzle_app/src/weatherData_bloc.dart';
-import 'package:drizzle_app/widgets.dart';
+import 'package:soleil_app/splash.dart';
+import 'package:soleil_app/src/hourlyTimeSeries.dart';
+import 'package:soleil_app/src/weatherData_bloc.dart';
+import 'package:soleil_app/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
 

@@ -1,5 +1,5 @@
-import 'package:drizzle_app/src/hourlyTimeSeries.dart';
-import 'package:drizzle_app/src/weatherCode.dart';
+import 'package:soleil_app/src/hourlyTimeSeries.dart';
+import 'package:soleil_app/src/weatherCode.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:weather_icons/weather_icons.dart';

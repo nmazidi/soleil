@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'package:drizzle_app/intro.dart';
-import 'package:drizzle_app/main.dart';
-import 'package:drizzle_app/src/weatherData_bloc.dart';
+import 'package:soleil_app/intro.dart';
+import 'package:soleil_app/main.dart';
+import 'package:soleil_app/src/weatherData_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';

@@ -1,6 +1,6 @@
-import 'package:drizzle_app/src/apiKeys.dart';
-import 'package:drizzle_app/src/hourlyTimeSeries.dart';
-import 'package:drizzle_app/src/weatherData_bloc.dart';
+import 'package:soleil_app/src/apiKeys.dart';
+import 'package:soleil_app/src/hourlyTimeSeries.dart';
+import 'package:soleil_app/src/weatherData_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:http/http.dart' as http;

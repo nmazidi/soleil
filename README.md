@@ -1,4 +1,4 @@
-# Drizzle
+# Soleil
 
 A weather forecast app being developed in Dart and Flutter
 
