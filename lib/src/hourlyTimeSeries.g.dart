@@ -1,21 +1,23 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'timeSeries.dart';
+part of 'hourlyTimeSeries.dart';
 
 // **************************************************************************
 // BuiltValueGenerator
 // **************************************************************************
 
-Serializer<TimeSeries> _$timeSeriesSerializer = new _$TimeSeriesSerializer();
+Serializer<HourlyTimeSeries> _$hourlyTimeSeriesSerializer =
+    new _$HourlyTimeSeriesSerializer();
 
-class _$TimeSeriesSerializer implements StructuredSerializer<TimeSeries> {
+class _$HourlyTimeSeriesSerializer
+    implements StructuredSerializer<HourlyTimeSeries> {
   @override
-  final Iterable<Type> types = const [TimeSeries, _$TimeSeries];
+  final Iterable<Type> types = const [HourlyTimeSeries, _$HourlyTimeSeries];
   @override
-  final String wireName = 'TimeSeries';
+  final String wireName = 'HourlyTimeSeries';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, TimeSeries object,
+  Iterable<Object> serialize(Serializers serializers, HourlyTimeSeries object,
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'time',
@@ -131,9 +133,10 @@ class _$TimeSeriesSerializer implements StructuredSerializer<TimeSeries> {
   }
 
   @override
-  TimeSeries deserialize(Serializers serializers, Iterable<Object> serialized,
+  HourlyTimeSeries deserialize(
+      Serializers serializers, Iterable<Object> serialized,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = new TimeSeriesBuilder();
+    final result = new HourlyTimeSeriesBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
@@ -224,7 +227,7 @@ class _$TimeSeriesSerializer implements StructuredSerializer<TimeSeries> {
   }
 }
 
-class _$TimeSeries extends TimeSeries {
+class _$HourlyTimeSeries extends HourlyTimeSeries {
   @override
   final DateTime time;
   @override
@@ -264,10 +267,11 @@ class _$TimeSeries extends TimeSeries {
   @override
   final int probOfPrecipitation;
 
-  factory _$TimeSeries([void Function(TimeSeriesBuilder) updates]) =>
-      (new TimeSeriesBuilder()..update(updates)).build();
+  factory _$HourlyTimeSeries(
+          [void Function(HourlyTimeSeriesBuilder) updates]) =>
+      (new HourlyTimeSeriesBuilder()..update(updates)).build();
 
-  _$TimeSeries._(
+  _$HourlyTimeSeries._(
       {this.time,
       this.screenTemperature,
       this.maxScreenAirTemp,
@@ -289,24 +293,26 @@ class _$TimeSeries extends TimeSeries {
       this.probOfPrecipitation})
       : super._() {
     if (time == null) {
-      throw new BuiltValueNullFieldError('TimeSeries', 'time');
+      throw new BuiltValueNullFieldError('HourlyTimeSeries', 'time');
     }
     if (screenTemperature == null) {
-      throw new BuiltValueNullFieldError('TimeSeries', 'screenTemperature');
+      throw new BuiltValueNullFieldError(
+          'HourlyTimeSeries', 'screenTemperature');
     }
   }
 
   @override
-  TimeSeries rebuild(void Function(TimeSeriesBuilder) updates) =>
+  HourlyTimeSeries rebuild(void Function(HourlyTimeSeriesBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  TimeSeriesBuilder toBuilder() => new TimeSeriesBuilder()..replace(this);
+  HourlyTimeSeriesBuilder toBuilder() =>
+      new HourlyTimeSeriesBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is TimeSeries &&
+    return other is HourlyTimeSeries &&
         time == other.time &&
         screenTemperature == other.screenTemperature &&
         maxScreenAirTemp == other.maxScreenAirTemp &&
@@ -380,7 +386,7 @@ class _$TimeSeries extends TimeSeries {
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('TimeSeries')
+    return (newBuiltValueToStringHelper('HourlyTimeSeries')
           ..add('time', time)
           ..add('screenTemperature', screenTemperature)
           ..add('maxScreenAirTemp', maxScreenAirTemp)
@@ -404,8 +410,9 @@ class _$TimeSeries extends TimeSeries {
   }
 }
 
-class TimeSeriesBuilder implements Builder<TimeSeries, TimeSeriesBuilder> {
-  _$TimeSeries _$v;
+class HourlyTimeSeriesBuilder
+    implements Builder<HourlyTimeSeries, HourlyTimeSeriesBuilder> {
+  _$HourlyTimeSeries _$v;
 
   DateTime _time;
   DateTime get time => _$this._time;
@@ -497,9 +504,9 @@ class TimeSeriesBuilder implements Builder<TimeSeries, TimeSeriesBuilder> {
   set probOfPrecipitation(int probOfPrecipitation) =>
       _$this._probOfPrecipitation = probOfPrecipitation;
 
-  TimeSeriesBuilder();
+  HourlyTimeSeriesBuilder();
 
-  TimeSeriesBuilder get _$this {
+  HourlyTimeSeriesBuilder get _$this {
     if (_$v != null) {
       _time = _$v.time;
       _screenTemperature = _$v.screenTemperature;
@@ -526,22 +533,22 @@ class TimeSeriesBuilder implements Builder<TimeSeries, TimeSeriesBuilder> {
   }
 
   @override
-  void replace(TimeSeries other) {
+  void replace(HourlyTimeSeries other) {
     if (other == null) {
       throw new ArgumentError.notNull('other');
     }
-    _$v = other as _$TimeSeries;
+    _$v = other as _$HourlyTimeSeries;
   }
 
   @override
-  void update(void Function(TimeSeriesBuilder) updates) {
+  void update(void Function(HourlyTimeSeriesBuilder) updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$TimeSeries build() {
+  _$HourlyTimeSeries build() {
     final _$result = _$v ??
-        new _$TimeSeries._(
+        new _$HourlyTimeSeries._(
             time: time,
             screenTemperature: screenTemperature,
             maxScreenAirTemp: maxScreenAirTemp,

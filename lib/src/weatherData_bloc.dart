@@ -4,14 +4,14 @@ import 'package:geocoder/geocoder.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'timeSeries.dart';
+import 'hourlyTimeSeries.dart';
 import 'apiKeys.dart';
 
 class WeatherDataBloc {
-  final _timeSeriesListSubject = BehaviorSubject<List<TimeSeries>>();
+  final _timeSeriesListSubject = BehaviorSubject<List<HourlyTimeSeries>>();
   final _coordinatesController = StreamController<Coordinates>();
 
-  Stream<List<TimeSeries>> get timeSeriesList => _timeSeriesListSubject.stream;
+  Stream<List<HourlyTimeSeries>> get hourlyTimeSeriesList => _timeSeriesListSubject.stream;
   Sink<Coordinates> get coordinates => _coordinatesController.sink;
 
   // API keys and URL
@@ -44,10 +44,10 @@ class WeatherDataBloc {
     final res = await http.get(_url, headers: _credentials);
     if (res.statusCode == 200) {
       // Get list of hourly data as geojson.
-      final timeSeriesList = await parseHourlyData(res.body);
-      if (timeSeriesList.isNotEmpty) {
-        // Deserialise the data into TimeSeries objects and add to BehaviourSubject.
-        _timeSeriesListSubject.add(deserializeHourlyData(timeSeriesList));
+      final hourlyTimeSeriesList = await parseHourlyData(res.body);
+      if (hourlyTimeSeriesList.isNotEmpty) {
+        // Deserialise the data into HourlyTimeSeries objects and add to BehaviourSubject.
+        _timeSeriesListSubject.add(deserializeHourlyData(hourlyTimeSeriesList));
       }
     } else {
       throw HttpException(res.body);

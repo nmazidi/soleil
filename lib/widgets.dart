@@ -1,11 +1,11 @@
-import 'package:drizzle_app/src/timeSeries.dart';
+import 'package:drizzle_app/src/hourlyTimeSeries.dart';
 import 'package:drizzle_app/src/weatherCode.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:weather_icons/weather_icons.dart';
 
 class DailyExpansionTile extends StatelessWidget {
-  final List<TimeSeries> data;
+  final List<HourlyTimeSeries> data;
   const DailyExpansionTile({Key key, this.data}) : super(key: key);
 
   @override
@@ -58,7 +58,7 @@ class DailyExpansionTile extends StatelessWidget {
 }
 
 class DailyExpandedData extends StatelessWidget {
-  final List<TimeSeries> data;
+  final List<HourlyTimeSeries> data;
   const DailyExpandedData({Key key, this.data}) : super(key: key);
 
   @override

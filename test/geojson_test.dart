@@ -1,5 +1,5 @@
 import 'package:drizzle_app/src/apiKeys.dart';
-import 'package:drizzle_app/src/timeSeries.dart';
+import 'package:drizzle_app/src/hourlyTimeSeries.dart';
 import 'package:drizzle_app/src/weatherData_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:geocoder/geocoder.dart';
@@ -35,6 +35,6 @@ void main() {
     final WeatherDataBloc bloc = WeatherDataBloc();
     Coordinates testCoords = Coordinates(51.454514, -2.587910);
     bloc.coordinates.add(testCoords);
-    expect(await bloc.timeSeriesList.first, isNotEmpty);
+    expect(await bloc.hourlyTimeSeriesList.first, isNotEmpty);
   });
 }

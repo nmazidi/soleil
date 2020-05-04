@@ -1,6 +1,6 @@
 import 'dart:collection';
 import 'package:drizzle_app/splash.dart';
-import 'package:drizzle_app/src/timeSeries.dart';
+import 'package:drizzle_app/src/hourlyTimeSeries.dart';
 import 'package:drizzle_app/src/weatherData_bloc.dart';
 import 'package:drizzle_app/widgets.dart';
 import 'package:flutter/material.dart';
@@ -60,9 +60,9 @@ class _HomeState extends State<Home> {
             padding: EdgeInsets.all(5),
             child: Card(
               elevation: 5,
-              child: StreamBuilder<List<TimeSeries>>(
-                  stream: widget.bloc.timeSeriesList,
-                  initialData: UnmodifiableListView<TimeSeries>([]),
+              child: StreamBuilder<List<HourlyTimeSeries>>(
+                  stream: widget.bloc.hourlyTimeSeriesList,
+                  initialData: UnmodifiableListView<HourlyTimeSeries>([]),
                   builder: (context, snapshot) {
                     if (snapshot.data.isEmpty) {
                       return Center(

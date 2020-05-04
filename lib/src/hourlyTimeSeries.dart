@@ -3,10 +3,10 @@ import 'package:built_value/serializer.dart';
 import 'package:geojson/geojson.dart';
 import 'serializers.dart';
 
-part 'timeSeries.g.dart';
+part 'hourlyTimeSeries.g.dart';
 
-abstract class TimeSeries implements Built<TimeSeries, TimeSeriesBuilder> {
-  static Serializer<TimeSeries> get serializer => _$timeSeriesSerializer;
+abstract class HourlyTimeSeries implements Built<HourlyTimeSeries, HourlyTimeSeriesBuilder> {
+  static Serializer<HourlyTimeSeries> get serializer => _$hourlyTimeSeriesSerializer;
 
   /// The timestamp of the given forecast in yyyy-mm-ddThh:mmZ.
   DateTime get time;
@@ -90,8 +90,8 @@ abstract class TimeSeries implements Built<TimeSeries, TimeSeriesBuilder> {
   @nullable
   int get probOfPrecipitation;
 
-  TimeSeries._();
-  factory TimeSeries([void Function(TimeSeriesBuilder) updates]) = _$TimeSeries;
+  HourlyTimeSeries._();
+  factory HourlyTimeSeries([void Function(HourlyTimeSeriesBuilder) updates]) = _$HourlyTimeSeries;
 }
 
 Future<List> parseHourlyData(String data) async {
@@ -102,8 +102,8 @@ Future<List> parseHourlyData(String data) async {
       .value;
 }
 
-List<TimeSeries> deserializeHourlyData(List data) {
+List<HourlyTimeSeries> deserializeHourlyData(List data) {
   return data
-      .map((a) => standardSerializers.deserializeWith(TimeSeries.serializer, a))
+      .map((a) => standardSerializers.deserializeWith(HourlyTimeSeries.serializer, a))
       .toList();
 }
