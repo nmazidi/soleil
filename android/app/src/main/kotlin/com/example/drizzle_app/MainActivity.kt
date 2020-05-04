@@ -1,4 +1,4 @@
-package com.example.drizzle_app
+package com.example.soleil_app
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity
