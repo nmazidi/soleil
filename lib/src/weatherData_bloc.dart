@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:soleil_app/src/data/dataType.dart';
 import 'package:soleil_app/src/data/hourlyTimeSeries.dart';
 import 'package:soleil_app/src/apiKeys.dart';
+import 'package:soleil_app/src/exceptions.dart';
 import 'package:soleil_app/src/utilities.dart';
 
 class WeatherDataBloc {
@@ -49,7 +50,7 @@ class WeatherDataBloc {
         _timeSeriesListSubject.add(deserializeHourlyData(hourlyTimeSeriesList));
       }
     } else {
-      throw HttpException(res.body);
+      throw MetOfficeApiError('HTTP GET request error: ${res.body}');
     }
   }
 
