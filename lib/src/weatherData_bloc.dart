@@ -48,7 +48,8 @@ class WeatherDataBloc {
   Future<void> _updateWeatherData(
       DataType type, Coordinates coordinates) async {
     // API http request url.
-    final _url = getBaseUrl(type);
+    final _url =
+        '${getBaseUrl(type)}latitude=${coordinates.latitude}&longitude=${coordinates.longitude}';
     final res = await http.get(_url, headers: _credentials);
     if (res.statusCode == 200) {
       // Get list of hourly data as geojson.
