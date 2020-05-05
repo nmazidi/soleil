@@ -4,8 +4,10 @@ import 'package:geocoder/geocoder.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:soleil_app/src/data/dataType.dart';
 import 'package:soleil_app/src/data/hourlyTimeSeries.dart';
-import 'apiKeys.dart';
+import 'package:soleil_app/src/apiKeys.dart';
+import 'package:soleil_app/src/utilities.dart';
 
 class WeatherDataBloc {
   final _timeSeriesListSubject = BehaviorSubject<List<HourlyTimeSeries>>();
@@ -16,8 +18,6 @@ class WeatherDataBloc {
 
   // API keys and URL
   static Map<String, String> _credentials;
-  static const _baseUrl =
-      'https://api-metoffice.apiconnect.ibmcloud.com/metoffice/production/v0/forecasts/point/hourly?';
 
   WeatherDataBloc() {
     // Load API keys from secret json file that isn't included in version control
@@ -34,13 +34,12 @@ class WeatherDataBloc {
     });
     // Listen to a change to the requested coordinates and execute
     _coordinatesController.stream
-        .listen((coordinates) async => _updateWeatherData(coordinates));
+        .listen((coordinates) async => _updateWeatherData(DataType.HOURLY, coordinates));
   }
 
-  Future<void> _updateWeatherData(Coordinates coordinates) async {
+  Future<void> _updateWeatherData(DataType type, Coordinates coordinates) async {
     // API http request url.
-    final _url =
-        '${_baseUrl}latitude=${coordinates.latitude}&longitude=${coordinates.longitude}';
+    final _url = getBaseUrl(type);
     final res = await http.get(_url, headers: _credentials);
     if (res.statusCode == 200) {
       // Get list of hourly data as geojson.
