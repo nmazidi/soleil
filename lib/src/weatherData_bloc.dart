@@ -1,20 +1,25 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:geocoder/geocoder.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:soleil_app/src/data/dataType.dart';
 import 'package:soleil_app/src/data/hourlyTimeSeries.dart';
+import 'package:soleil_app/src/data/dailyTimeSeries.dart';
 import 'package:soleil_app/src/apiKeys.dart';
 import 'package:soleil_app/src/exceptions.dart';
 import 'package:soleil_app/src/utilities.dart';
 
 class WeatherDataBloc {
-  final _timeSeriesListSubject = BehaviorSubject<List<HourlyTimeSeries>>();
+  final _hourlyTimeSeriesListSubject =
+      BehaviorSubject<List<HourlyTimeSeries>>();
+  final _dailyTimeSeriesListSubject = BehaviorSubject<List<DailyTimeSeries>>();
   final _coordinatesController = StreamController<Coordinates>();
 
-  Stream<List<HourlyTimeSeries>> get hourlyTimeSeriesList => _timeSeriesListSubject.stream;
+  Stream<List<HourlyTimeSeries>> get hourlyTimeSeriesList =>
+      _hourlyTimeSeriesListSubject.stream;
+  Stream<List<DailyTimeSeries>> get dailyTimeSeriesList =>
+      _dailyTimeSeriesListSubject.stream;
   Sink<Coordinates> get coordinates => _coordinatesController.sink;
 
   // API keys and URL
@@ -34,20 +39,35 @@ class WeatherDataBloc {
       }
     });
     // Listen to a change to the requested coordinates and execute
-    _coordinatesController.stream
-        .listen((coordinates) async => _updateWeatherData(DataType.HOURLY, coordinates));
+    _coordinatesController.stream.listen((coordinates) async {
+      _updateWeatherData(DataType.DAILY, coordinates);
+      _updateWeatherData(DataType.HOURLY, coordinates);
+    });
   }
 
-  Future<void> _updateWeatherData(DataType type, Coordinates coordinates) async {
+  Future<void> _updateWeatherData(
+      DataType type, Coordinates coordinates) async {
     // API http request url.
     final _url = getBaseUrl(type);
     final res = await http.get(_url, headers: _credentials);
     if (res.statusCode == 200) {
       // Get list of hourly data as geojson.
-      final hourlyTimeSeriesList = await parseHourlyData(res.body);
-      if (hourlyTimeSeriesList.isNotEmpty) {
-        // Deserialise the data into HourlyTimeSeries objects and add to BehaviourSubject.
-        _timeSeriesListSubject.add(deserializeHourlyData(hourlyTimeSeriesList));
+      final timeSeriesList = await parseMetOfficeData(res.body);
+      if (timeSeriesList.isNotEmpty) {
+        // Deserialise the data into xTimeSeries objects and add to BehaviourSubject.
+        switch (type) {
+          case DataType.DAILY:
+            _dailyTimeSeriesListSubject
+                .add(deserializeDailyData(timeSeriesList));
+            break;
+          case DataType.HOURLY:
+            _hourlyTimeSeriesListSubject
+                .add(deserializeHourlyData(timeSeriesList));
+            break;
+          default:
+            throw MetOfficeApiError(
+                'Invalid DataType ($type) when updating weather data.');
+        }
       }
     } else {
       throw MetOfficeApiError('HTTP GET request error: ${res.body}');

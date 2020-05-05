@@ -1,5 +1,6 @@
 import 'package:soleil_app/src/apiKeys.dart';
 import 'package:soleil_app/src/data/hourlyTimeSeries.dart';
+import 'package:soleil_app/src/utilities.dart';
 import 'package:soleil_app/src/weatherData_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:geocoder/geocoder.dart';
@@ -22,7 +23,7 @@ void main() {
 
     final res = await http.get(url, headers: _credentials);
     if (res.statusCode == 200) {
-      final timeSeriesList = await parseHourlyData(res.body);
+      final timeSeriesList = await parseMetOfficeData(res.body);
       expect(timeSeriesList, isNotEmpty);
       if (timeSeriesList.isNotEmpty) {
         final _deserializedData = deserializeHourlyData(timeSeriesList);
