@@ -1,6 +1,6 @@
 import 'dart:collection';
 import 'package:soleil_app/splash.dart';
-import 'package:soleil_app/src/hourlyTimeSeries.dart';
+import 'package:soleil_app/src/data/hourlyTimeSeries.dart';
 import 'package:soleil_app/src/weatherData_bloc.dart';
 import 'package:soleil_app/widgets.dart';
 import 'package:flutter/material.dart';

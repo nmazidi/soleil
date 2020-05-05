@@ -1,7 +1,7 @@
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:geojson/geojson.dart';
-import 'serializers.dart';
+import 'package:soleil_app/src/serializers/serializers.dart';
 
 part 'dailyTimeSeries.g.dart';
 

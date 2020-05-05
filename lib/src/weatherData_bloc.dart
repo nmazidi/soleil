@@ -4,7 +4,7 @@ import 'package:geocoder/geocoder.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'hourlyTimeSeries.dart';
+import 'package:soleil_app/src/data/hourlyTimeSeries.dart';
 import 'apiKeys.dart';
 
 class WeatherDataBloc {

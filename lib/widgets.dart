@@ -1,4 +1,4 @@
-import 'package:soleil_app/src/hourlyTimeSeries.dart';
+import 'package:soleil_app/src/data/hourlyTimeSeries.dart';
 import 'package:soleil_app/src/weatherCode.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
