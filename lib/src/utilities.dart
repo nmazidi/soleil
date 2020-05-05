@@ -11,6 +11,6 @@ String getDataType(DataType type) {
 }
 
 /// Returns the base Met office API url for given frequency of data
-String getBaseUrl(String dataType) {
-  return 'https://api-metoffice.apiconnect.ibmcloud.com/metoffice/production/v0/forecasts/point/$dataType?';
+String getBaseUrl(DataType dataType) {
+  return 'https://api-metoffice.apiconnect.ibmcloud.com/metoffice/production/v0/forecasts/point/${getDataType(dataType)}?';
 }
