@@ -74,7 +74,7 @@ class _HomeState extends State<Home> {
                         if (hourlySnapshot.data.isEmpty)
                           return Center(child: CircularProgressIndicator());
                         return ListView.builder(
-                          itemCount: (hourlySnapshot.data.last.time.day -
+                          itemCount: (dailySnapshot.data.last.time.day -
                                   DateTime.now().day) +
                               1,
                           itemBuilder: (context, int index) {
