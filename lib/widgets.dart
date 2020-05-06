@@ -1,12 +1,14 @@
 import 'package:soleil_app/src/data/hourlyTimeSeries.dart';
+import 'package:soleil_app/src/data/dailyTimeSeries.dart';
 import 'package:soleil_app/src/weatherCode.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:weather_icons/weather_icons.dart';
 
 class DailyExpansionTile extends StatelessWidget {
-  final List<HourlyTimeSeries> data;
-  const DailyExpansionTile({Key key, this.data}) : super(key: key);
+  final DailyTimeSeries dailyData;
+  final List<HourlyTimeSeries> hourlyData;
+  const DailyExpansionTile({Key key, this.dailyData, this.hourlyData}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +22,10 @@ class DailyExpansionTile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                data.first.time.day == DateTime.now().day
+                dailyData.time.day == DateTime.now().day
                     ? Text('TODAY')
                     : Text(DateFormat('EEE')
-                        .format(data.first.time)
+                        .format(dailyData.time)
                         .toUpperCase()),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -34,7 +36,7 @@ class DailyExpansionTile extends StatelessWidget {
                       size: 15.0,
                     ),
                     Text(
-                      '${data.first.probOfPrecipitation.toString()}%',
+                      '${dailyData.dayProbabilityOfRain.round().toString()}%',
                       style: TextStyle(color: Colors.lightBlue),
                       textAlign: TextAlign.left,
                     ),
@@ -47,12 +49,12 @@ class DailyExpansionTile extends StatelessWidget {
             height: 50.0,
             child: Icon(
               WeatherIcons.fromString(
-                  weatherCode(data.first.significantWeatherCode), fallback: WeatherIcons.day_sunny),
+                  weatherCode(dailyData.daySignificantWeatherCode), fallback: Icons.not_listed_location),
             ),
           )
         ],
       ),
-      children: [DailyExpandedData(data: data)],
+      children: [DailyExpandedData(data: hourlyData)],
     );
   }
 }

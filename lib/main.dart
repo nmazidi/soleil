@@ -1,6 +1,7 @@
 import 'dart:collection';
 import 'package:soleil_app/splash.dart';
 import 'package:soleil_app/src/data/hourlyTimeSeries.dart';
+import 'package:soleil_app/src/data/dailyTimeSeries.dart';
 import 'package:soleil_app/src/weatherData_bloc.dart';
 import 'package:soleil_app/widgets.dart';
 import 'package:flutter/material.dart';
@@ -49,8 +50,8 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:
-            Text('${widget.location.subAdminArea}, ${widget.location.countryCode}'),
+        title: Text(
+            '${widget.location.subAdminArea}, ${widget.location.countryCode}'),
         leading: Icon(Icons.cloud),
         centerTitle: true,
       ),
@@ -60,28 +61,38 @@ class _HomeState extends State<Home> {
             padding: EdgeInsets.all(5),
             child: Card(
               elevation: 5,
-              child: StreamBuilder<List<HourlyTimeSeries>>(
-                  stream: widget.bloc.hourlyTimeSeriesList,
-                  initialData: UnmodifiableListView<HourlyTimeSeries>([]),
-                  builder: (context, snapshot) {
-                    if (snapshot.data.isEmpty) {
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                    return ListView.builder(
-                      itemCount:
-                          (snapshot.data.last.time.day - DateTime.now().day) + 1,
-                      itemBuilder: (context, int index) {
-                        return DailyExpansionTile(
-                            data: snapshot.data
-                                .where((ts) =>
-                                    (ts.time.day == DateTime.now().day + index))
-                                .toList());
-                      },
-                      shrinkWrap: true,
-                    );
-                  }),
+              child: StreamBuilder<List<DailyTimeSeries>>(
+                stream: widget.bloc.dailyTimeSeriesList,
+                initialData: UnmodifiableListView<DailyTimeSeries>([]),
+                builder: (context, dailySnapshot) {
+                  if (dailySnapshot.data.isEmpty)
+                    return Center(child: CircularProgressIndicator());
+                  return StreamBuilder<List<HourlyTimeSeries>>(
+                      stream: widget.bloc.hourlyTimeSeriesList,
+                      initialData: UnmodifiableListView<HourlyTimeSeries>([]),
+                      builder: (context, hourlySnapshot) {
+                        if (hourlySnapshot.data.isEmpty)
+                          return Center(child: CircularProgressIndicator());
+                        return ListView.builder(
+                          itemCount: (hourlySnapshot.data.last.time.day -
+                                  DateTime.now().day) +
+                              1,
+                          itemBuilder: (context, int index) {
+                            return DailyExpansionTile(
+                              dailyData: dailySnapshot.data
+                                  .where((ts) =>
+                                      ts.time.day == DateTime.now().day + index).first,
+                              hourlyData: hourlySnapshot.data
+                                  .where((ts) =>
+                                      ts.time.day == DateTime.now().day + index)
+                                  .toList(),
+                            );
+                          },
+                          shrinkWrap: true,
+                        );
+                      });
+                },
+              ),
             ),
           ),
         ],
