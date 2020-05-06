@@ -127,7 +127,7 @@ class _$HourlyTimeSeriesSerializer
       result
         ..add('probOfPrecipitation')
         ..add(serializers.serialize(object.probOfPrecipitation,
-            specifiedType: const FullType(int)));
+            specifiedType: const FullType(double)));
     }
     return result;
   }
@@ -218,7 +218,7 @@ class _$HourlyTimeSeriesSerializer
           break;
         case 'probOfPrecipitation':
           result.probOfPrecipitation = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(double)) as double;
           break;
       }
     }
@@ -265,7 +265,7 @@ class _$HourlyTimeSeries extends HourlyTimeSeries {
   @override
   final double totalSnowAmount;
   @override
-  final int probOfPrecipitation;
+  final double probOfPrecipitation;
 
   factory _$HourlyTimeSeries(
           [void Function(HourlyTimeSeriesBuilder) updates]) =>
@@ -499,9 +499,9 @@ class HourlyTimeSeriesBuilder
   set totalSnowAmount(double totalSnowAmount) =>
       _$this._totalSnowAmount = totalSnowAmount;
 
-  int _probOfPrecipitation;
-  int get probOfPrecipitation => _$this._probOfPrecipitation;
-  set probOfPrecipitation(int probOfPrecipitation) =>
+  double _probOfPrecipitation;
+  double get probOfPrecipitation => _$this._probOfPrecipitation;
+  set probOfPrecipitation(double probOfPrecipitation) =>
       _$this._probOfPrecipitation = probOfPrecipitation;
 
   HourlyTimeSeriesBuilder();

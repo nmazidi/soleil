@@ -89,7 +89,7 @@ abstract class HourlyTimeSeries
 
   /// Probability of precipitation. (%)
   @nullable
-  int get probOfPrecipitation;
+  double get probOfPrecipitation;
 
   HourlyTimeSeries._();
   factory HourlyTimeSeries([void Function(HourlyTimeSeriesBuilder) updates]) =
