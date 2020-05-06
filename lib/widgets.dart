@@ -8,7 +8,8 @@ import 'package:weather_icons/weather_icons.dart';
 class DailyExpansionTile extends StatelessWidget {
   final DailyTimeSeries dailyData;
   final List<HourlyTimeSeries> hourlyData;
-  const DailyExpansionTile({Key key, this.dailyData, this.hourlyData}) : super(key: key);
+  const DailyExpansionTile({Key key, this.dailyData, this.hourlyData})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,16 +25,15 @@ class DailyExpansionTile extends StatelessWidget {
               children: <Widget>[
                 dailyData.time.day == DateTime.now().day
                     ? Text('TODAY')
-                    : Text(DateFormat('EEE')
-                        .format(dailyData.time)
-                        .toUpperCase()),
+                    : Text(
+                        DateFormat('EEE').format(dailyData.time).toUpperCase()),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Icon(
                       WeatherIcons.raindrop,
                       color: Colors.lightBlue,
-                      size: 15.0,
+                      size: 15.5,
                     ),
                     Text(
                       '${dailyData.dayProbabilityOfRain.round().toString()}%',
@@ -47,10 +47,13 @@ class DailyExpansionTile extends StatelessWidget {
           ),
           Container(
             height: 50.0,
-            child: Icon(
-              WeatherIcons.fromString(
-                  weatherCode(dailyData.daySignificantWeatherCode), fallback: Icons.not_listed_location),
-            ),
+            child: dailyData.time.day == DateTime.now().day
+                ? Icon(WeatherIcons.fromString(
+                    weatherCode(hourlyData.first.significantWeatherCode),
+                    fallback: Icons.not_listed_location))
+                : Icon(WeatherIcons.fromString(
+                    weatherCode(dailyData.daySignificantWeatherCode),
+                    fallback: Icons.not_listed_location)),
           )
         ],
       ),
