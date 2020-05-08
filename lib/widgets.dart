@@ -88,8 +88,7 @@ class DailyExpandedData extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: (data
                 //.where((ts) => (ts.time.hour % 2 == 0))
-                .map((ts) =>
-                    Text('${ts.feelsLikeTemperature.toString()}°C'))
+                .map((ts) => Text('${ts.feelsLikeTemperature.toString()}°C'))
                 .toList()),
           ),
         ],
