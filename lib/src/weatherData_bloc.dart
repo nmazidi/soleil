@@ -54,13 +54,7 @@ class WeatherDataBloc {
       switch (type) {
         case DataType.HOURLY:
           // Combine hourly date with three hourly data.
-          var threeHourlyData = await _getWeatherData(DataType.THREEHOURLY, coordinates);
-          threeHourlyData.map((ts) {
-            ts['feelsLikeTemperature'] = ts['feelsLikeTemp'];
-            ts['screenTemperature'] = (ts['maxScreenAirTemp']+ts['minScreenAirTemp'])/2;
-          }).toList();
-          timeSeriesList
-              .addAll(threeHourlyData);
+          timeSeriesList.addAll(await _getAndParseThreeHourlyData(coordinates));
           // Sort the combined list in terms of time.
           timeSeriesList.sort((a, b) => a['time'].compareTo(b['time']));
           _hourlyTimeSeriesListSubject
@@ -87,6 +81,17 @@ class WeatherDataBloc {
     } else {
       throw MetOfficeApiError('HTTP GET request error: ${res.body}');
     }
+  }
+
+  Future<List> _getAndParseThreeHourlyData(Coordinates coordinates) async {
+    var threeHourlyData =
+        await _getWeatherData(DataType.THREEHOURLY, coordinates);
+    threeHourlyData.map((ts) {
+      ts['feelsLikeTemperature'] = ts['feelsLikeTemp'];
+      ts['screenTemperature'] =
+          (ts['maxScreenAirTemp'] + ts['minScreenAirTemp']) / 2;
+    }).toList();
+    return threeHourlyData;
   }
 
   Future<void> saveDefaultLocation(Coordinates coordinates) async {
