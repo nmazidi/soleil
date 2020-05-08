@@ -4,7 +4,7 @@ import 'package:soleil_app/src/serializers/serializers.dart';
 
 part 'hourlyTimeSeries.g.dart';
 
-abstract class HourlyTimeSeries
+abstract class HourlyTimeSeries 
     implements Built<HourlyTimeSeries, HourlyTimeSeriesBuilder> {
   static Serializer<HourlyTimeSeries> get serializer =>
       _$hourlyTimeSeriesSerializer;
@@ -13,6 +13,7 @@ abstract class HourlyTimeSeries
   DateTime get time;
 
   /// The air temperature as measured on a Stevenson screen. (degrees Celsius)
+  @nullable
   double get screenTemperature;
 
   /// Maximum Screen Air Temperature Over Previous Hour. (degrees Celsius)

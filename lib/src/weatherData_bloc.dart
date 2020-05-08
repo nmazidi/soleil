@@ -47,33 +47,50 @@ class WeatherDataBloc {
 
   Future<void> _updateWeatherData(
       DataType type, Coordinates coordinates) async {
+    List timeSeriesList;
+    if (type == DataType.HOURLY) {
+      final hourlyData = await _getWeatherData(DataType.HOURLY, coordinates);
+      final threeHourlyData =
+          await _getWeatherData(DataType.THREEHOURLY, coordinates);
+      //final test = List.from(threeHourlyData.map((ts) => ts));
+      timeSeriesList = List.from(hourlyData)..addAll(threeHourlyData);
+      //timeSeriesList = await _combineHourlyWeatherData(hourlyData, threeHourlyData);
+    } else {
+      timeSeriesList = await _getWeatherData(type, coordinates);
+    }
+    if (timeSeriesList.isNotEmpty) {
+      // Deserialise the data into xTimeSeries objects and add to BehaviourSubject.
+      switch (type) {
+        case DataType.DAILY:
+          _dailyTimeSeriesListSubject.add(deserializeDailyData(timeSeriesList));
+          break;
+        case DataType.HOURLY:
+          _hourlyTimeSeriesListSubject
+              .add(deserializeHourlyData(timeSeriesList));
+          break;
+        default:
+          throw MetOfficeApiError(
+              'Invalid DataType ($type) when updating weather data.');
+      }
+    }
+  }
+
+  Future<List> _getWeatherData(DataType type, Coordinates coordinates) async {
     // API http request url.
     final _url =
         '${getBaseUrl(type)}latitude=${coordinates.latitude}&longitude=${coordinates.longitude}';
     final res = await http.get(_url, headers: _credentials);
     if (res.statusCode == 200) {
       // Get list of hourly data as geojson.
-      final timeSeriesList = await parseMetOfficeData(res.body);
-      if (timeSeriesList.isNotEmpty) {
-        // Deserialise the data into xTimeSeries objects and add to BehaviourSubject.
-        switch (type) {
-          case DataType.DAILY:
-            _dailyTimeSeriesListSubject
-                .add(deserializeDailyData(timeSeriesList));
-            break;
-          case DataType.HOURLY:
-            _hourlyTimeSeriesListSubject
-                .add(deserializeHourlyData(timeSeriesList));
-            break;
-          default:
-            throw MetOfficeApiError(
-                'Invalid DataType ($type) when updating weather data.');
-        }
-      }
+      return await parseMetOfficeData(res.body);
     } else {
       throw MetOfficeApiError('HTTP GET request error: ${res.body}');
     }
   }
+
+  Future<List<HourlyTimeSeries>> _combineHourlyWeatherData(
+      List<HourlyTimeSeries> hourlyData,
+      List<HourlyTimeSeries> threeHourlyData) {}
 
   Future<void> saveDefaultLocation(Coordinates coordinates) async {
     // Load shared preferences from disk.
