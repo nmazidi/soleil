@@ -54,8 +54,13 @@ class WeatherDataBloc {
       switch (type) {
         case DataType.HOURLY:
           // Combine hourly date with three hourly data.
+          var threeHourlyData = await _getWeatherData(DataType.THREEHOURLY, coordinates);
+          threeHourlyData.map((ts) {
+            ts['feelsLikeTemperature'] = ts['feelsLikeTemp'];
+            ts['screenTemperature'] = (ts['maxScreenAirTemp']+ts['minScreenAirTemp'])/2;
+          }).toList();
           timeSeriesList
-              .addAll(await _getWeatherData(DataType.THREEHOURLY, coordinates));
+              .addAll(threeHourlyData);
           // Sort the combined list in terms of time.
           timeSeriesList.sort((a, b) => a['time'].compareTo(b['time']));
           _hourlyTimeSeriesListSubject

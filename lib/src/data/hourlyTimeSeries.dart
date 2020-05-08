@@ -4,7 +4,7 @@ import 'package:soleil_app/src/serializers/serializers.dart';
 
 part 'hourlyTimeSeries.g.dart';
 
-abstract class HourlyTimeSeries 
+abstract class HourlyTimeSeries
     implements Built<HourlyTimeSeries, HourlyTimeSeriesBuilder> {
   static Serializer<HourlyTimeSeries> get serializer =>
       _$hourlyTimeSeriesSerializer;
