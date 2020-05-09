@@ -13,7 +13,6 @@ abstract class HourlyTimeSeries
   DateTime get time;
 
   /// The air temperature as measured on a Stevenson screen. (degrees Celsius)
-  @nullable
   double get screenTemperature;
 
   /// Maximum Screen Air Temperature Over Previous Hour. (degrees Celsius)
