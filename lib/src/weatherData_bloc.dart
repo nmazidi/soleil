@@ -58,8 +58,6 @@ class WeatherDataBloc {
           threeHourlyData.removeRange(0, (timeSeriesList.length~/3)+1);
           // Combine hourly date with three hourly data.
           timeSeriesList.addAll(threeHourlyData);
-          // Sort the combined list in terms of time.
-          timeSeriesList.sort((a, b) => a['time'].compareTo(b['time']));
           _hourlyTimeSeriesListSubject
               .add(deserializeHourlyData(timeSeriesList));
           break;
