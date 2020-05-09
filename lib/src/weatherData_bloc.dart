@@ -53,8 +53,11 @@ class WeatherDataBloc {
       // Deserialise the data into xTimeSeries objects and add to BehaviourSubject.
       switch (type) {
         case DataType.HOURLY:
+          var threeHourlyData = await _getAndParseThreeHourlyData(coordinates);
+          // Remove data that already exists in hourlyData
+          threeHourlyData.removeRange(0, (timeSeriesList.length~/3)+1);
           // Combine hourly date with three hourly data.
-          timeSeriesList.addAll(await _getAndParseThreeHourlyData(coordinates));
+          timeSeriesList.addAll(threeHourlyData);
           // Sort the combined list in terms of time.
           timeSeriesList.sort((a, b) => a['time'].compareTo(b['time']));
           _hourlyTimeSeriesListSubject
