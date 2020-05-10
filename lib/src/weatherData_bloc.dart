@@ -55,11 +55,11 @@ class WeatherDataBloc {
         case DataType.HOURLY:
           var threeHourlyData = await _getAndParseThreeHourlyData(coordinates);
           // Remove data that already exists in hourlyData
-          threeHourlyData.removeRange(0, (timeSeriesList.length~/3)+1);
+          threeHourlyData.removeRange(0, (timeSeriesList.length ~/ 3) + 1);
           // Combine hourly date with three hourly data.
           timeSeriesList.addAll(threeHourlyData);
-          _hourlyTimeSeriesListSubject
-              .add(deserializeHourlyData(timeSeriesList));
+          _hourlyTimeSeriesListSubject.add(deserializeHourlyData(
+              timeSeriesList, timeSeriesList.length - threeHourlyData.length));
           break;
         case DataType.DAILY:
           _dailyTimeSeriesListSubject.add(deserializeDailyData(timeSeriesList));

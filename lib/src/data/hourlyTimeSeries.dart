@@ -96,22 +96,23 @@ abstract class HourlyTimeSeries
       _$HourlyTimeSeries;
 }
 
-List<HourlyTimeSeries> deserializeHourlyData(List data) {
-  final test = data
+List<HourlyTimeSeries> deserializeHourlyData(List data, int count) {
+  final deserializedData = data
       .map((a) =>
           standardSerializers.deserializeWith(HourlyTimeSeries.serializer, a))
       .toList();
   List<HourlyTimeSeries> newList = [];
-  for (int i = 50; i < data.length; i++) {
-    var temp = test[i].rebuild(
-        (updates) => updates..time = test[i].time.add(Duration(hours: 1)));
-    newList.add(temp);
-    var temp2 = temp.rebuild(
-        (updates) => updates..time = temp.time.add(Duration(hours: 1)));
-    newList.add(temp2);
+  for (; count < data.length; count++) {
+    var newEntries = [
+      deserializedData[count].rebuild((updates) =>
+          updates..time = deserializedData[count].time.add(Duration(hours: 1))),
+      deserializedData[count].rebuild((updates) =>
+          updates..time = deserializedData[count].time.add(Duration(hours: 2)))
+    ];
+    newList.addAll(newEntries);
   }
-  test.addAll(newList);
+  deserializedData.addAll(newList);
   // Sort the combined list in terms of time.
-  test.sort((a, b) => a.time.compareTo(b.time));
-  return test;
+  deserializedData.sort((a, b) => a.time.compareTo(b.time));
+  return deserializedData;
 }
