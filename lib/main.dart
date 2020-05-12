@@ -46,22 +46,22 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  ScrollController _controller;
+  ScrollController _scrollController;
   final targetElevation = 5;
   double _elevation = 0;
 
   @override
   void initState() {
     super.initState();
-    _controller = ScrollController();
-    _controller.addListener(_scrollListener);
+    _scrollController = ScrollController();
+    _scrollController.addListener(_scrollListener);
   }
 
   @override
   void dispose() {
     super.dispose();
-    _controller?.removeListener(_scrollListener);
-    _controller?.dispose();
+    _scrollController?.removeListener(_scrollListener);
+    _scrollController?.dispose();
   }
 
   @override
@@ -81,41 +81,39 @@ class _HomeState extends State<Home> {
       body: Column(
         children: [
           Expanded(
-            child: Container(
-              child: StreamBuilder<UnmodifiableListView<DailyTimeSeries>>(
-                stream: widget.bloc.dailyTimeSeriesList,
-                initialData: UnmodifiableListView<DailyTimeSeries>([]),
-                builder: (context, dailySnapshot) {
-                  if (dailySnapshot.data.isEmpty)
-                    return Center(child: CircularProgressIndicator());
-                  return StreamBuilder<UnmodifiableListView<HourlyTimeSeries>>(
-                      stream: widget.bloc.hourlyTimeSeriesList,
-                      initialData: UnmodifiableListView<HourlyTimeSeries>([]),
-                      builder: (context, hourlySnapshot) {
-                        if (hourlySnapshot.data.isEmpty)
-                          return Center(child: CircularProgressIndicator());
-                        return ListView.builder(
-                          controller: _controller,
-                          itemCount: (dailySnapshot.data.last.time.day -
-                                  DateTime.now().day) +
-                              1,
-                          itemBuilder: (context, int index) {
-                            return DailyExpansionTile(
-                              dailyData: dailySnapshot.data
-                                  .where((ts) =>
-                                      ts.time.day == DateTime.now().day + index)
-                                  .first,
-                              hourlyData: hourlySnapshot.data
-                                  .where((ts) =>
-                                      ts.time.day == DateTime.now().day + index)
-                                  .toList(),
-                            );
-                          },
-                          shrinkWrap: true,
-                        );
-                      });
-                },
-              ),
+            child: StreamBuilder<UnmodifiableListView<DailyTimeSeries>>(
+              stream: widget.bloc.dailyTimeSeriesList,
+              initialData: UnmodifiableListView<DailyTimeSeries>([]),
+              builder: (context, dailySnapshot) {
+                if (dailySnapshot.data.isEmpty)
+                  return Center(child: CircularProgressIndicator());
+                return StreamBuilder<UnmodifiableListView<HourlyTimeSeries>>(
+                    stream: widget.bloc.hourlyTimeSeriesList,
+                    initialData: UnmodifiableListView<HourlyTimeSeries>([]),
+                    builder: (context, hourlySnapshot) {
+                      if (hourlySnapshot.data.isEmpty)
+                        return Center(child: CircularProgressIndicator());
+                      return ListView.builder(
+                        controller: _scrollController,
+                        itemCount: (dailySnapshot.data.last.time.day -
+                                DateTime.now().day) +
+                            1,
+                        itemBuilder: (context, int index) {
+                          return DailyExpansionTile(
+                            dailyData: dailySnapshot.data
+                                .where((ts) =>
+                                    ts.time.day == DateTime.now().day + index)
+                                .first,
+                            hourlyData: hourlySnapshot.data
+                                .where((ts) =>
+                                    ts.time.day == DateTime.now().day + index)
+                                .toList(),
+                          );
+                        },
+                        shrinkWrap: true,
+                      );
+                    });
+              },
             ),
           ),
         ],
@@ -124,7 +122,7 @@ class _HomeState extends State<Home> {
   }
 
   _scrollListener() {
-    double newElevation = _controller.offset > 1 ? targetElevation : 0;
+    double newElevation = _scrollController.offset > 1 ? targetElevation : 0;
     if (_elevation != newElevation) {
       setState(() {
         _elevation = newElevation;
