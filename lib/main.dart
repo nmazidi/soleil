@@ -57,10 +57,8 @@ class _HomeState extends State<Home> {
       ),
       body: Column(
         children: [
-          Container(
-            padding: EdgeInsets.all(5),
-            child: Card(
-              elevation: 5,
+          Expanded(
+            child: Container(
               child: StreamBuilder<List<DailyTimeSeries>>(
                 stream: widget.bloc.dailyTimeSeriesList,
                 initialData: UnmodifiableListView<DailyTimeSeries>([]),
