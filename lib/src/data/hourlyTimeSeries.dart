@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:soleil_app/src/serializers/serializers.dart';
@@ -96,7 +98,7 @@ abstract class HourlyTimeSeries
       _$HourlyTimeSeries;
 }
 
-List<HourlyTimeSeries> deserializeHourlyData(List data, int count) {
+UnmodifiableListView<HourlyTimeSeries> deserializeHourlyData(List data, int count) {
   final deserializedData = data
       .map((a) =>
           standardSerializers.deserializeWith(HourlyTimeSeries.serializer, a))
@@ -114,5 +116,5 @@ List<HourlyTimeSeries> deserializeHourlyData(List data, int count) {
   deserializedData.addAll(newList);
   // Sort the combined list in terms of time.
   deserializedData.sort((a, b) => a.time.compareTo(b.time));
-  return deserializedData;
+  return UnmodifiableListView(deserializedData);
 }

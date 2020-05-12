@@ -59,13 +59,13 @@ class _HomeState extends State<Home> {
         children: [
           Expanded(
             child: Container(
-              child: StreamBuilder<List<DailyTimeSeries>>(
+              child: StreamBuilder<UnmodifiableListView<DailyTimeSeries>>(
                 stream: widget.bloc.dailyTimeSeriesList,
                 initialData: UnmodifiableListView<DailyTimeSeries>([]),
                 builder: (context, dailySnapshot) {
                   if (dailySnapshot.data.isEmpty)
                     return Center(child: CircularProgressIndicator());
-                  return StreamBuilder<List<HourlyTimeSeries>>(
+                  return StreamBuilder<UnmodifiableListView<HourlyTimeSeries>>(
                       stream: widget.bloc.hourlyTimeSeriesList,
                       initialData: UnmodifiableListView<HourlyTimeSeries>([]),
                       builder: (context, hourlySnapshot) {

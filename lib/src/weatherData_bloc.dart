@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 import 'package:geocoder/geocoder.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:http/http.dart' as http;
@@ -12,13 +13,13 @@ import 'package:soleil_app/src/utilities.dart';
 
 class WeatherDataBloc {
   final _hourlyTimeSeriesListSubject =
-      BehaviorSubject<List<HourlyTimeSeries>>();
-  final _dailyTimeSeriesListSubject = BehaviorSubject<List<DailyTimeSeries>>();
+      BehaviorSubject<UnmodifiableListView<HourlyTimeSeries>>();
+  final _dailyTimeSeriesListSubject = BehaviorSubject<UnmodifiableListView<DailyTimeSeries>>();
   final _coordinatesController = StreamController<Coordinates>();
 
-  Stream<List<HourlyTimeSeries>> get hourlyTimeSeriesList =>
+  Stream<UnmodifiableListView<HourlyTimeSeries>> get hourlyTimeSeriesList =>
       _hourlyTimeSeriesListSubject.stream;
-  Stream<List<DailyTimeSeries>> get dailyTimeSeriesList =>
+  Stream<UnmodifiableListView<DailyTimeSeries>> get dailyTimeSeriesList =>
       _dailyTimeSeriesListSubject.stream;
   Sink<Coordinates> get coordinates => _coordinatesController.sink;
 

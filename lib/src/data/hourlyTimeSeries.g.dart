@@ -23,13 +23,10 @@ class _$HourlyTimeSeriesSerializer
       'time',
       serializers.serialize(object.time,
           specifiedType: const FullType(DateTime)),
+      'screenTemperature',
+      serializers.serialize(object.screenTemperature,
+          specifiedType: const FullType(double)),
     ];
-    if (object.screenTemperature != null) {
-      result
-        ..add('screenTemperature')
-        ..add(serializers.serialize(object.screenTemperature,
-            specifiedType: const FullType(double)));
-    }
     if (object.maxScreenAirTemp != null) {
       result
         ..add('maxScreenAirTemp')
@@ -297,6 +294,10 @@ class _$HourlyTimeSeries extends HourlyTimeSeries {
       : super._() {
     if (time == null) {
       throw new BuiltValueNullFieldError('HourlyTimeSeries', 'time');
+    }
+    if (screenTemperature == null) {
+      throw new BuiltValueNullFieldError(
+          'HourlyTimeSeries', 'screenTemperature');
     }
   }
 

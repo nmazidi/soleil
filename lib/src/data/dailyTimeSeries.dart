@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:soleil_app/src/serializers/serializers.dart';
@@ -156,9 +158,9 @@ abstract class DailyTimeSeries
       _$DailyTimeSeries;
 }
 
-List<DailyTimeSeries> deserializeDailyData(List data) {
-  return data
+UnmodifiableListView<DailyTimeSeries> deserializeDailyData(List data) {
+  return UnmodifiableListView(data
       .map((a) =>
           standardSerializers.deserializeWith(DailyTimeSeries.serializer, a))
-      .toList();
+      .toList());
 }
