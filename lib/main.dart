@@ -46,14 +46,37 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  ScrollController _controller;
+  final targetElevation = 5;
+  double _elevation = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = ScrollController();
+    _controller.addListener(_scrollListener);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller?.removeListener(_scrollListener);
+    _controller?.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-            '${widget.location.subAdminArea}, ${widget.location.countryCode}'),
-        leading: Icon(Icons.cloud),
-        centerTitle: true,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(50.0),
+        child: AppBar(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          elevation: _elevation,
+          title: Text(
+              '${widget.location.subAdminArea}, ${widget.location.countryCode}'),
+          leading: Icon(Icons.cloud),
+          centerTitle: true,
+        ),
       ),
       body: Column(
         children: [
@@ -72,6 +95,7 @@ class _HomeState extends State<Home> {
                         if (hourlySnapshot.data.isEmpty)
                           return Center(child: CircularProgressIndicator());
                         return ListView.builder(
+                          controller: _controller,
                           itemCount: (dailySnapshot.data.last.time.day -
                                   DateTime.now().day) +
                               1,
@@ -79,7 +103,8 @@ class _HomeState extends State<Home> {
                             return DailyExpansionTile(
                               dailyData: dailySnapshot.data
                                   .where((ts) =>
-                                      ts.time.day == DateTime.now().day + index).first,
+                                      ts.time.day == DateTime.now().day + index)
+                                  .first,
                               hourlyData: hourlySnapshot.data
                                   .where((ts) =>
                                       ts.time.day == DateTime.now().day + index)
@@ -96,5 +121,14 @@ class _HomeState extends State<Home> {
         ],
       ),
     );
+  }
+
+  _scrollListener() {
+    double newElevation = _controller.offset > 1 ? targetElevation : 0;
+    if (_elevation != newElevation) {
+      setState(() {
+        _elevation = newElevation;
+      });
+    }
   }
 }
