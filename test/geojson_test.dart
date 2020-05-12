@@ -18,16 +18,28 @@ void main() {
     });
     final lat = '51.454514';
     final long = '-2.587910';
-    final url =
+    String url =
         'https://api-metoffice.apiconnect.ibmcloud.com/metoffice/production/v0/forecasts/point/hourly?latitude=$lat&longitude=$long';
 
     final res = await http.get(url, headers: _credentials);
     if (res.statusCode == 200) {
       final timeSeriesList = await parseMetOfficeData(res.body);
       expect(timeSeriesList, isNotEmpty);
-      if (timeSeriesList.isNotEmpty) {
-        final _deserializedData = deserializeHourlyData(timeSeriesList);
-        expect(_deserializedData, isNotNull);
+      // Get three hourly data
+      url =
+          'https://api-metoffice.apiconnect.ibmcloud.com/metoffice/production/v0/forecasts/point/three-hourly?latitude=$lat&longitude=$long';
+      final res2 = await http.get(url, headers: _credentials);
+      if (res2.statusCode == 200) {
+        final threeHourlyData = await parseMetOfficeData(res.body);
+        // Remove data that already exists in hourlyData
+        threeHourlyData.removeRange(0, (timeSeriesList.length ~/ 3) + 1);
+        // Combine hourly date with three hourly data.
+        timeSeriesList.addAll(threeHourlyData);
+        if (timeSeriesList.isNotEmpty) {
+          final _deserializedData = deserializeHourlyData(
+              timeSeriesList, timeSeriesList.length - threeHourlyData.length);
+          expect(_deserializedData, isNotNull);
+        }
       }
     }
   });
