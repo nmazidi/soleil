@@ -13,51 +13,57 @@ class DailyExpansionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ExpansionTile(
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Container(
-            width: 70.0,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                dailyData.time.day == DateTime.now().day
-                    ? Text('TODAY')
-                    : Text(
-                        DateFormat('EEE').format(dailyData.time).toUpperCase()),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Icon(
-                      WeatherIcons.raindrop,
-                      color: Colors.lightBlue,
-                      size: 15.5,
-                    ),
-                    Text(
-                      '${dailyData.dayProbabilityOfRain.round().toString()}%',
-                      style: TextStyle(color: Colors.lightBlue),
-                      textAlign: TextAlign.left,
-                    ),
-                  ],
-                )
-              ],
+    return ListTileTheme(
+      dense: true,
+      child: ExpansionTile(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Container(
+              width: 70.0,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  dailyData.time.day == DateTime.now().day
+                      ? Text('TODAY', style: TextStyle(fontSize: 15))
+                      : Text(
+                          DateFormat('EEE')
+                              .format(dailyData.time)
+                              .toUpperCase(),
+                          style: TextStyle(fontSize: 15)),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Icon(
+                        WeatherIcons.raindrop,
+                        color: Colors.lightBlue,
+                        size: 14,
+                      ),
+                      Text(
+                        '${dailyData.dayProbabilityOfRain.round().toString()}%',
+                        style: TextStyle(color: Colors.lightBlue, fontSize: 15),
+                        textAlign: TextAlign.left,
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
-          ),
-          Container(
-            height: 50.0,
-            child: dailyData.time.day == DateTime.now().day
-                ? Icon(WeatherIcons.fromString(
-                    weatherCode(hourlyData.first.significantWeatherCode),
-                    fallback: Icons.not_listed_location))
-                : Icon(WeatherIcons.fromString(
-                    weatherCode(dailyData.daySignificantWeatherCode),
-                    fallback: Icons.not_listed_location)),
-          )
-        ],
+            Container(
+              padding: const EdgeInsets.only(bottom: 7),
+              child: dailyData.time.day == DateTime.now().day
+                  ? Icon(WeatherIcons.fromString(
+                      weatherCode(hourlyData.first.significantWeatherCode),
+                      fallback: Icons.not_listed_location))
+                  : Icon(WeatherIcons.fromString(
+                      weatherCode(dailyData.daySignificantWeatherCode),
+                      fallback: Icons.not_listed_location)),
+            )
+          ],
+        ),
+        children: [DailyExpandedData(data: hourlyData)],
       ),
-      children: [DailyExpandedData(data: hourlyData)],
     );
   }
 }
@@ -88,7 +94,8 @@ class DailyExpandedData extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: (data
                 .where((ts) => (ts.time.hour % 2 == 0))
-                .map((ts) => Text('${ts.feelsLikeTemperature.round().toString()}°C'))
+                .map((ts) =>
+                    Text('${ts.feelsLikeTemperature.round().toString()}°C'))
                 .toList()),
           ),
         ],
