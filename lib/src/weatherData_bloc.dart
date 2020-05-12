@@ -37,7 +37,8 @@ class WeatherDataBloc {
         coordinates.add(Coordinates(
             prefs.getDouble('default_lat'), prefs.getDouble('default_long')));
       }
-    });
+    }).catchError((onError) => print('Cannot access shared prefs.'));
+
     // Listen to a change to the requested coordinates and execute
     _coordinatesController.stream.listen((coordinates) async {
       _updateWeatherData(DataType.DAILY, coordinates);
