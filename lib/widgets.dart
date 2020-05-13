@@ -21,16 +21,29 @@ class DailyExpansionTile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Container(
-              width: 70.0,
+              width: 50.0,
+              padding: const EdgeInsets.only(bottom: 7),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                dailyData.time.day == DateTime.now().day
+                    ? Icon(WeatherIcons.fromString(
+                        weatherCode(hourlyData.first.significantWeatherCode),
+                        fallback: Icons.not_listed_location))
+                    : Icon(WeatherIcons.fromString(
+                        weatherCode(dailyData.daySignificantWeatherCode),
+                        fallback: Icons.not_listed_location)),
+              ]),
+            ),
+            Container(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   dailyData.time.day == DateTime.now().day
-                      ? Text('TODAY', style: TextStyle(fontSize: 15))
+                      ? Text('Today', style: TextStyle(fontSize: 15))
                       : Text(
-                          DateFormat('EEE')
-                              .format(dailyData.time)
-                              .toUpperCase(),
+                          DateFormat('EEEE')
+                              .format(dailyData.time),
                           style: TextStyle(fontSize: 15)),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,16 +63,6 @@ class DailyExpansionTile extends StatelessWidget {
                 ],
               ),
             ),
-            Container(
-              padding: const EdgeInsets.only(bottom: 7),
-              child: dailyData.time.day == DateTime.now().day
-                  ? Icon(WeatherIcons.fromString(
-                      weatherCode(hourlyData.first.significantWeatherCode),
-                      fallback: Icons.not_listed_location))
-                  : Icon(WeatherIcons.fromString(
-                      weatherCode(dailyData.daySignificantWeatherCode),
-                      fallback: Icons.not_listed_location)),
-            )
           ],
         ),
         children: [DailyExpandedData(data: hourlyData)],
