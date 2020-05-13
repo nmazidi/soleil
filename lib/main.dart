@@ -46,87 +46,122 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  ScrollController _scrollController;
-  final targetElevation = 5;
-  double _elevation = 0;
+  // ScrollController _scrollController;
+  // final targetElevation = 5;
+  // double _elevation = 0;
 
-  @override
-  void initState() {
-    super.initState();
-    _scrollController = ScrollController();
-    _scrollController.addListener(_scrollListener);
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _scrollController = ScrollController();
+  //   _scrollController.addListener(_scrollListener);
+  // }
 
-  @override
-  void dispose() {
-    super.dispose();
-    _scrollController?.removeListener(_scrollListener);
-    _scrollController?.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   _scrollController?.removeListener(_scrollListener);
+  //   _scrollController?.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(50.0),
-        child: AppBar(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          elevation: _elevation,
-          title: Text(
-              '${widget.location.subAdminArea}, ${widget.location.countryCode}'),
-          leading: Icon(Icons.cloud),
-          centerTitle: true,
-        ),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: StreamBuilder<UnmodifiableListView<DailyTimeSeries>>(
-              stream: widget.bloc.dailyTimeSeriesList,
-              initialData: UnmodifiableListView<DailyTimeSeries>([]),
-              builder: (context, dailySnapshot) {
-                if (dailySnapshot.data.isEmpty)
-                  return Center(child: CircularProgressIndicator());
-                return StreamBuilder<UnmodifiableListView<HourlyTimeSeries>>(
-                    stream: widget.bloc.hourlyTimeSeriesList,
-                    initialData: UnmodifiableListView<HourlyTimeSeries>([]),
-                    builder: (context, hourlySnapshot) {
-                      if (hourlySnapshot.data.isEmpty)
-                        return Center(child: CircularProgressIndicator());
-                      return ListView.builder(
-                        controller: _scrollController,
-                        itemCount: (dailySnapshot.data.last.time.day -
-                                DateTime.now().day) +
-                            1,
-                        itemBuilder: (context, int index) {
-                          return DailyExpansionTile(
-                            dailyData: dailySnapshot.data
-                                .where((ts) =>
-                                    ts.time.day == DateTime.now().day + index)
-                                .first,
-                            hourlyData: hourlySnapshot.data
-                                .where((ts) =>
-                                    ts.time.day == DateTime.now().day + index)
-                                .toList(),
+      // appBar: PreferredSize(
+      //   preferredSize: Size.fromHeight(50.0),
+      //   child: AppBar(
+      //     backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      //     elevation: 0,//_elevation,
+      //     title: Text(
+      //         '${widget.location.subAdminArea}, ${widget.location.countryCode}'),
+      //     leading: Icon(Icons.cloud),
+      //     centerTitle: true,
+      //   ),
+      // ),
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            expandedHeight: 200,
+          ),
+          StreamBuilder<UnmodifiableListView<DailyTimeSeries>>(
+            stream: widget.bloc.dailyTimeSeriesList,
+            //initialData: UnmodifiableListView<DailyTimeSeries>([]),
+            builder: (context, dailySnapshot) {
+              return SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    return StreamBuilder<UnmodifiableListView<HourlyTimeSeries>>(
+                        stream: widget.bloc.hourlyTimeSeriesList,
+                        builder: (context, hourlySnapshot) {
+                          // if (hourlySnapshot.data.isEmpty)
+                          //   return Center(child: CircularProgressIndicator());
+                          return ListView.builder(
+                            //controller: _scrollController,
+                            itemCount: (dailySnapshot.data.last.time.day -
+                                    DateTime.now().day) +
+                                1,
+                            itemBuilder: (context, int index) {
+                              return DailyExpansionTile(
+                                dailyData: dailySnapshot.data
+                                    .where((ts) =>
+                                        ts.time.day ==
+                                        DateTime.now().day + index)
+                                    .first,
+                                hourlyData: hourlySnapshot.data
+                                    .where((ts) =>
+                                        ts.time.day ==
+                                        DateTime.now().day + index)
+                                    .toList(),
+                              );
+                            },
+                            shrinkWrap: true,
                           );
-                        },
-                        shrinkWrap: true,
-                      );
-                    });
-              },
-            ),
+                        });
+                  },
+                  childCount: dailySnapshot.hasData ? 1 : 0,
+                ),
+              );
+              // return StreamBuilder(
+              //   stream: widget.bloc.hourlyTimeSeriesList,
+              //   //initialData: UnmodifiableListView<HourlyTimeSeries>([]),
+              //   builder: (context, hourlySnapshot) {
+              //     // if (hourlySnapshot.data.isEmpty)
+              //     //   return Center(child: CircularProgressIndicator());
+
+              //     // return ListView.builder(
+              //     //   //controller: _scrollController,
+              //     //   itemCount: (dailySnapshot.data.last.time.day -
+              //     //           DateTime.now().day) +
+              //     //       1,
+              //     //   itemBuilder: (context, int index) {
+              //     //     return DailyExpansionTile(
+              //     //       dailyData: dailySnapshot.data
+              //     //           .where((ts) =>
+              //     //               ts.time.day == DateTime.now().day + index)
+              //     //           .first,
+              //     //       hourlyData: hourlySnapshot.data
+              //     //           .where((ts) =>
+              //     //               ts.time.day == DateTime.now().day + index)
+              //     //           .toList(),
+              //     //     );
+              //     //   },
+              //     //   shrinkWrap: true,
+              //     // );
+              //   },
+              // );
+            },
           ),
         ],
       ),
     );
   }
 
-  _scrollListener() {
-    double newElevation = _scrollController.offset > 1 ? targetElevation : 0;
-    if (_elevation != newElevation) {
-      setState(() {
-        _elevation = newElevation;
-      });
-    }
-  }
+  // _scrollListener() {
+  //   double newElevation = _scrollController.offset > 1 ? targetElevation : 0;
+  //   if (_elevation != newElevation) {
+  //     setState(() {
+  //       _elevation = newElevation;
+  //     });
+  //   }
+  // }
 }
