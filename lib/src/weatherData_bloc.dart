@@ -16,17 +16,21 @@ class WeatherDataBloc {
       BehaviorSubject<UnmodifiableListView<HourlyTimeSeries>>();
   final _dailyTimeSeriesListSubject = BehaviorSubject<UnmodifiableListView<DailyTimeSeries>>();
   final _coordinatesController = StreamController<Coordinates>();
+  final _isLoadingController = StreamController<bool>();
 
   Stream<UnmodifiableListView<HourlyTimeSeries>> get hourlyTimeSeriesList =>
       _hourlyTimeSeriesListSubject.stream;
   Stream<UnmodifiableListView<DailyTimeSeries>> get dailyTimeSeriesList =>
       _dailyTimeSeriesListSubject.stream;
   Sink<Coordinates> get coordinates => _coordinatesController.sink;
+  Stream<bool> get isLoading => _isLoadingController.stream;
+  Sink<bool> get isLoadingSink => _isLoadingController.sink;
 
   // API keys and URL
   static Map<String, String> _credentials;
 
   WeatherDataBloc() {
+    this.isLoadingSink.add(true);
     // Load API keys from secret json file that isn't included in version control
     loadAPIKeys().then((credentials) {
       _credentials = Map.from(credentials['http-request-headers']);
@@ -35,7 +39,7 @@ class WeatherDataBloc {
     // Get default coordinates from shared preferences on disk
     SharedPreferences.getInstance().then((prefs) {
       if (prefs.getBool('default_coords_set') ?? false) {
-        coordinates.add(Coordinates(
+        this.coordinates.add(Coordinates(
             prefs.getDouble('default_lat'), prefs.getDouble('default_long')));
       }
     }).catchError((onError) => print('Cannot access shared prefs.'));
@@ -108,5 +112,6 @@ class WeatherDataBloc {
 
   void close() {
     _coordinatesController.close();
+    _isLoadingController.close();
   }
 }
