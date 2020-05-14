@@ -46,24 +46,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  // ScrollController _scrollController;
-  // final targetElevation = 5;
-  // double _elevation = 0;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _scrollController = ScrollController();
-  //   _scrollController.addListener(_scrollListener);
-  // }
-
-  // @override
-  // void dispose() {
-  //   super.dispose();
-  //   _scrollController?.removeListener(_scrollListener);
-  //   _scrollController?.dispose();
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -108,13 +90,4 @@ class _HomeState extends State<Home> {
       ),
     );
   }
-
-  // _scrollListener() {
-  //   double newElevation = _scrollController.offset > 1 ? targetElevation : 0;
-  //   if (_elevation != newElevation) {
-  //     setState(() {
-  //       _elevation = newElevation;
-  //     });
-  //   }
-  // }
 }
