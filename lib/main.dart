@@ -54,16 +54,6 @@ class _HomeState extends State<Home> {
           SliverAppBar(
             expandedHeight: 200,
           ),
-          SliverToBoxAdapter(
-            child: StreamBuilder<bool>(
-              stream: widget.bloc.isLoading,
-              builder: (context, snapshot) {
-                return (snapshot.data)
-                    ? Center(child: CircularProgressIndicator())
-                    : Container();
-              },
-            ),
-          ),
           StreamBuilder<UnmodifiableListView<DailyTimeSeries>>(
             stream: widget.bloc.dailyTimeSeriesList,
             builder: (context, dailySnapshot) {
@@ -95,6 +85,19 @@ class _HomeState extends State<Home> {
                 },
               );
             },
+          ),
+          SliverToBoxAdapter(
+            child: StreamBuilder<bool>(
+              stream: widget.bloc.isLoading,
+              builder: (context, snapshot) {
+                return (snapshot.data)
+                    ? Padding(
+                        padding: const EdgeInsets.only(top: 16.0),
+                        child: Center(child: CircularProgressIndicator()),
+                      )
+                    : Container();
+              },
+            ),
           ),
         ],
       ),
