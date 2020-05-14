@@ -94,6 +94,10 @@ class _HomeState extends State<Home> {
                               .toList(),
                         );
                       },
+                      childCount:
+                          (dailySnapshot.hasData && hourlySnapshot.hasData)
+                              ? dailySnapshot.data.length - 1
+                              : 0,
                     ),
                   );
                 },
