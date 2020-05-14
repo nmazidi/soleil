@@ -67,17 +67,6 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: PreferredSize(
-      //   preferredSize: Size.fromHeight(50.0),
-      //   child: AppBar(
-      //     backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      //     elevation: 0,//_elevation,
-      //     title: Text(
-      //         '${widget.location.subAdminArea}, ${widget.location.countryCode}'),
-      //     leading: Icon(Icons.cloud),
-      //     centerTitle: true,
-      //   ),
-      // ),
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
@@ -85,70 +74,30 @@ class _HomeState extends State<Home> {
           ),
           StreamBuilder<UnmodifiableListView<DailyTimeSeries>>(
             stream: widget.bloc.dailyTimeSeriesList,
-            //initialData: UnmodifiableListView<DailyTimeSeries>([]),
             builder: (context, dailySnapshot) {
-              return SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    return StreamBuilder<UnmodifiableListView<HourlyTimeSeries>>(
-                        stream: widget.bloc.hourlyTimeSeriesList,
-                        builder: (context, hourlySnapshot) {
-                          // if (hourlySnapshot.data.isEmpty)
-                          //   return Center(child: CircularProgressIndicator());
-                          return ListView.builder(
-                            //controller: _scrollController,
-                            itemCount: (dailySnapshot.data.last.time.day -
-                                    DateTime.now().day) +
-                                1,
-                            itemBuilder: (context, int index) {
-                              return DailyExpansionTile(
-                                dailyData: dailySnapshot.data
-                                    .where((ts) =>
-                                        ts.time.day ==
-                                        DateTime.now().day + index)
-                                    .first,
-                                hourlyData: hourlySnapshot.data
-                                    .where((ts) =>
-                                        ts.time.day ==
-                                        DateTime.now().day + index)
-                                    .toList(),
-                              );
-                            },
-                            shrinkWrap: true,
-                          );
-                        });
-                  },
-                  childCount: dailySnapshot.hasData ? 1 : 0,
-                ),
+              return StreamBuilder<UnmodifiableListView<HourlyTimeSeries>>(
+                stream: widget.bloc.hourlyTimeSeriesList,
+                builder: (context, hourlySnapshot) {
+                  // if (hourlySnapshot.data.isEmpty)
+                  //   return Center(child: CircularProgressIndicator());
+                  return SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        return DailyExpansionTile(
+                          dailyData: dailySnapshot.data
+                              .where((ts) =>
+                                  ts.time.day == DateTime.now().day + index)
+                              .first,
+                          hourlyData: hourlySnapshot.data
+                              .where((ts) =>
+                                  ts.time.day == DateTime.now().day + index)
+                              .toList(),
+                        );
+                      },
+                    ),
+                  );
+                },
               );
-              // return StreamBuilder(
-              //   stream: widget.bloc.hourlyTimeSeriesList,
-              //   //initialData: UnmodifiableListView<HourlyTimeSeries>([]),
-              //   builder: (context, hourlySnapshot) {
-              //     // if (hourlySnapshot.data.isEmpty)
-              //     //   return Center(child: CircularProgressIndicator());
-
-              //     // return ListView.builder(
-              //     //   //controller: _scrollController,
-              //     //   itemCount: (dailySnapshot.data.last.time.day -
-              //     //           DateTime.now().day) +
-              //     //       1,
-              //     //   itemBuilder: (context, int index) {
-              //     //     return DailyExpansionTile(
-              //     //       dailyData: dailySnapshot.data
-              //     //           .where((ts) =>
-              //     //               ts.time.day == DateTime.now().day + index)
-              //     //           .first,
-              //     //       hourlyData: hourlySnapshot.data
-              //     //           .where((ts) =>
-              //     //               ts.time.day == DateTime.now().day + index)
-              //     //           .toList(),
-              //     //     );
-              //     //   },
-              //     //   shrinkWrap: true,
-              //     // );
-              //   },
-              // );
             },
           ),
         ],
