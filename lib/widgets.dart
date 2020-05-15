@@ -97,7 +97,7 @@ class DailyExpandedData extends StatelessWidget {
             children: (data
                 .where((ts) => (ts.time.hour % 2 == 0))
                 .map((ts) =>
-                    Text('${ts.feelsLikeTemperature.round().toString()}°C'))
+                    Text('${ts.feelsLikeTemperature.round().toString()}°'))
                 .toList()),
           ),
         ],

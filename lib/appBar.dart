@@ -149,17 +149,9 @@ class AppBarContent extends StatelessWidget {
               height: kExtendedHeight,
               child: Container(
                 padding: EdgeInsets.only(left: 16.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Text(snapshot.data.screenTemperature.round().toString(),
-                        style: TextStyle(fontSize: 30)),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 2.8),
-                      child: Text('°C', style: TextStyle(fontSize: 15)),
-                    ),
-                  ],
+                child: Text(
+                  '${snapshot.data.screenTemperature.round().toString()}°',
+                  style: TextStyle(fontSize: 30),
                 ),
               ),
             ),

@@ -17,9 +17,9 @@ String getBaseUrl(DataType dataType) {
 }
 
 Future<List> parseMetOfficeData(String data) async {
-    final _feature = (await featuresFromGeoJson(data)).collection[0];
-    return _feature.properties.entries
-        .where((a) => a.key.contains("timeSeries"))
-        .toList()[0]
-        .value;
-  }
+  final _feature = (await featuresFromGeoJson(data)).collection[0];
+  return _feature.properties.entries
+      .where((a) => a.key.contains("timeSeries"))
+      .toList()[0]
+      .value;
+}
