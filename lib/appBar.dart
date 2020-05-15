@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:soleil_app/src/data/hourlyTimeSeries.dart';
+import 'package:soleil_app/src/weatherData_bloc.dart';
 
 const double kExtendedHeight = 300;
 
 class SoleilAppBar extends StatelessWidget {
   final ScrollController scrollController;
+  final WeatherDataBloc bloc;
 
-  const SoleilAppBar({Key key, @required this.scrollController})
+  const SoleilAppBar(
+      {Key key, @required this.scrollController, @required this.bloc})
       : super(key: key);
 
   @override
@@ -19,9 +23,7 @@ class SoleilAppBar extends StatelessWidget {
       primary: true,
       pinned: true,
       expandedHeight: kExtendedHeight,
-      flexibleSpace: FlexibleSpaceBar(
-        background: Container(),
-      ),
+      flexibleSpace: AppBarContent(bloc: this.bloc),
     );
   }
 }
@@ -128,5 +130,40 @@ class AppBarHeaderContent extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class AppBarContent extends StatelessWidget {
+  final WeatherDataBloc bloc;
+
+  const AppBarContent({Key key, this.bloc}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<HourlyTimeSeries>(
+        stream: bloc.currentTimeSeries,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) return (FlexibleSpaceBar());
+          return FlexibleSpaceBar(
+            background: Container(
+              padding: EdgeInsets.only(top: kToolbarHeight),
+              height: kExtendedHeight,
+              child: Container(
+                padding: EdgeInsets.only(left: 16.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Text(snapshot.data.screenTemperature.round().toString(),
+                        style: TextStyle(fontSize: 30)),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 2.8),
+                      child: Text('°C', style: TextStyle(fontSize: 15)),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
   }
 }

@@ -54,7 +54,7 @@ class _HomeState extends State<Home> {
       body: CustomScrollView(
         controller: scrollController,
         slivers: <Widget>[
-          SoleilAppBar(scrollController: scrollController),
+          SoleilAppBar(scrollController: scrollController, bloc: widget.bloc),
           StreamBuilder<UnmodifiableListView<DailyTimeSeries>>(
             stream: widget.bloc.dailyTimeSeriesList,
             builder: (context, dailySnapshot) {
