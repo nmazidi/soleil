@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'package:soleil_app/appBar.dart';
 import 'package:soleil_app/splash.dart';
 import 'package:soleil_app/src/data/hourlyTimeSeries.dart';
 import 'package:soleil_app/src/data/dailyTimeSeries.dart';
@@ -51,9 +52,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
-          SliverAppBar(
-            expandedHeight: 200,
-          ),
+          SoleilAppBar(),
           StreamBuilder<UnmodifiableListView<DailyTimeSeries>>(
             stream: widget.bloc.dailyTimeSeriesList,
             builder: (context, dailySnapshot) {
