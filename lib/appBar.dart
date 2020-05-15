@@ -1,13 +1,24 @@
 import 'package:flutter/material.dart';
 
+const double kExtendedHeight = 300;
+
 class SoleilAppBar extends StatelessWidget {
+  final ScrollController scrollController;
+
+  const SoleilAppBar({Key key, @required this.scrollController})
+      : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      title: AppBarHeader(),
+      title: AppBarHeader(
+        scrollController: scrollController,
+        zeroOpacityOffset: kExtendedHeight - kToolbarHeight - 20,
+        fullOpacityOffset: kExtendedHeight - kToolbarHeight,
+      ),
       primary: true,
       pinned: true,
-      expandedHeight: 300,
+      expandedHeight: kExtendedHeight,
       flexibleSpace: FlexibleSpaceBar(
         background: Container(),
       ),
@@ -16,57 +27,75 @@ class SoleilAppBar extends StatelessWidget {
 }
 
 class AppBarHeader extends StatefulWidget {
+  final ScrollController scrollController;
+  final double zeroOpacityOffset;
+  final double fullOpacityOffset;
+
   const AppBarHeader({
     Key key,
-  }) : super(key: key);
+    @required this.scrollController,
+    this.zeroOpacityOffset = 0,
+    this.fullOpacityOffset = 0,
+  });
+
   @override
-  _AppBarHeaderState createState() {
-    return new _AppBarHeaderState();
-  }
+  _AppBarHeaderState createState() => _AppBarHeaderState();
 }
 
 class _AppBarHeaderState extends State<AppBarHeader> {
-  ScrollPosition _position;
-  bool _visible;
+  double _offset;
+
+  @override
+  initState() {
+    super.initState();
+    _offset = widget.scrollController.offset;
+    widget.scrollController.addListener(_setOffset);
+  }
+
   @override
   void dispose() {
     _removeListener();
     super.dispose();
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _removeListener();
-    _addListener();
-  }
-
-  void _addListener() {
-    _position = Scrollable.of(context)?.position;
-    _position?.addListener(_positionListener);
-    _positionListener();
+  void _setOffset() {
+    setState(() {
+      _offset = widget.scrollController.offset;
+    });
   }
 
   void _removeListener() {
-    _position?.removeListener(_positionListener);
+    widget.scrollController.removeListener(_setOffset);
   }
 
-  void _positionListener() {
-    final FlexibleSpaceBarSettings settings =
-        context.dependOnInheritedWidgetOfExactType();
-    bool visible =
-        settings == null || settings.currentExtent <= settings.minExtent;
-    if (_visible != visible) {
-      setState(() {
-        _visible = visible;
-      });
+  double _calculateOpacity() {
+    if (widget.fullOpacityOffset == widget.zeroOpacityOffset)
+      return 1;
+    else if (widget.fullOpacityOffset > widget.zeroOpacityOffset) {
+      // fading in
+      if (_offset <= widget.zeroOpacityOffset)
+        return 0;
+      else if (_offset >= widget.fullOpacityOffset)
+        return 1;
+      else
+        return ((_offset - widget.zeroOpacityOffset) /
+            (widget.fullOpacityOffset - widget.zeroOpacityOffset));
+    } else {
+      // fading out
+      if (_offset <= widget.fullOpacityOffset)
+        return 1;
+      else if (_offset >= widget.zeroOpacityOffset)
+        return 0;
+      else
+        return (_offset - widget.fullOpacityOffset) /
+            (widget.zeroOpacityOffset - widget.fullOpacityOffset);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Visibility(
-      visible: _visible,
+    return Opacity(
+      opacity: _calculateOpacity(),
       child: AppBarHeaderContent(),
     );
   }
