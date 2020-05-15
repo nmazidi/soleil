@@ -14,7 +14,9 @@ import 'package:soleil_app/src/utilities.dart';
 class WeatherDataBloc {
   final _hourlyTimeSeriesListSubject =
       BehaviorSubject<UnmodifiableListView<HourlyTimeSeries>>();
-  final _dailyTimeSeriesListSubject = BehaviorSubject<UnmodifiableListView<DailyTimeSeries>>();
+  final _dailyTimeSeriesListSubject =
+      BehaviorSubject<UnmodifiableListView<DailyTimeSeries>>();
+  final _currentTimeSeriesSubject = BehaviorSubject<HourlyTimeSeries>();
   final _coordinatesController = StreamController<Coordinates>();
   final _isLoadingController = StreamController<bool>();
 
@@ -22,6 +24,8 @@ class WeatherDataBloc {
       _hourlyTimeSeriesListSubject.stream;
   Stream<UnmodifiableListView<DailyTimeSeries>> get dailyTimeSeriesList =>
       _dailyTimeSeriesListSubject.stream;
+  Stream<HourlyTimeSeries> get currentTimeSeries =>
+      _currentTimeSeriesSubject.stream;
   Sink<Coordinates> get coordinates => _coordinatesController.sink;
   Stream<bool> get isLoading => _isLoadingController.stream;
   Sink<bool> get isLoadingSink => _isLoadingController.sink;
@@ -64,8 +68,10 @@ class WeatherDataBloc {
           threeHourlyData.removeRange(0, (timeSeriesList.length ~/ 3) + 1);
           // Combine hourly date with three hourly data.
           timeSeriesList.addAll(threeHourlyData);
-          _hourlyTimeSeriesListSubject.add(deserializeHourlyData(
-              timeSeriesList, timeSeriesList.length - threeHourlyData.length));
+          var deserializedData = deserializeHourlyData(
+              timeSeriesList, timeSeriesList.length - threeHourlyData.length);
+          _hourlyTimeSeriesListSubject.add(deserializedData);
+          _currentTimeSeriesSubject.add(deserializedData.first);
           break;
         case DataType.DAILY:
           _dailyTimeSeriesListSubject.add(deserializeDailyData(timeSeriesList));
