@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'package:flutter_map/plugin_api.dart';
 import 'package:soleil_app/appBar.dart';
 import 'package:soleil_app/splash.dart';
 import 'package:soleil_app/src/data/hourlyTimeSeries.dart';
@@ -7,6 +8,7 @@ import 'package:soleil_app/src/weatherData_bloc.dart';
 import 'package:soleil_app/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
+import 'package:latlong/latlong.dart';
 
 void main() {
   // Waits for widgets to initialise before getting any assets.
@@ -50,6 +52,13 @@ class _HomeState extends State<Home> {
   final ScrollController scrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
+    var overlayImages = <OverlayImage>[
+      OverlayImage(
+          bounds: LatLngBounds(LatLng(61, -12), LatLng(48, 5)),
+          opacity: 0.8,
+          imageProvider: NetworkImage(
+              'http://datapoint.metoffice.gov.uk/public/data/layer/wxfcs/Total_Cloud_Cover_Precip_Rate_Overlaid/png?RUN=2020-05-18T09:00:00Z&FORECAST=0&key=b1592b6c-c2ee-4a88-8938-736d95460172')),
+    ];
     return Scaffold(
       body: CustomScrollView(
         controller: scrollController,
@@ -100,6 +109,33 @@ class _HomeState extends State<Home> {
               },
             ),
           ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                height: 300,
+                child: Column(
+                  children: <Widget>[
+                    Flexible(
+                      child: FlutterMap(
+                        options: MapOptions(
+                          center: LatLng(51.45523, -2.59665),
+                          zoom: 6.0,
+                        ),
+                        layers: [
+                          TileLayerOptions(
+                              urlTemplate:
+                                  'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                              subdomains: ['a', 'b', 'c']),
+                          OverlayImageLayerOptions(overlayImages: overlayImages)
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          )
         ],
       ),
     );
