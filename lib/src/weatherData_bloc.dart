@@ -8,6 +8,7 @@ import 'package:soleil_app/src/data/dataType.dart';
 import 'package:soleil_app/src/data/hourlyTimeSeries.dart';
 import 'package:soleil_app/src/data/dailyTimeSeries.dart';
 import 'package:soleil_app/src/apiKeys.dart';
+import 'package:soleil_app/src/data/mapOverlayImagery.dart';
 import 'package:soleil_app/src/exceptions.dart';
 import 'package:soleil_app/src/utilities.dart';
 
@@ -31,13 +32,15 @@ class WeatherDataBloc {
   Sink<bool> get isLoadingSink => _isLoadingController.sink;
 
   // API keys and URL
-  static Map<String, String> _credentials;
+  static Map<String, String> httpRequestHeaders;
+  static String datapointKey;
 
   WeatherDataBloc() {
     this.isLoadingSink.add(true);
     // Load API keys from secret json file that isn't included in version control
     loadAPIKeys().then((credentials) {
-      _credentials = Map.from(credentials['http-request-headers']);
+      httpRequestHeaders = Map.from(credentials['http-request-headers']);
+      datapointKey = credentials['datapoint-application_id'];
     });
 
     // Get default coordinates from shared preferences on disk
@@ -87,7 +90,7 @@ class WeatherDataBloc {
     // API http request url.
     final _url =
         '${getBaseUrl(type)}latitude=${coordinates.latitude}&longitude=${coordinates.longitude}';
-    final res = await http.get(_url, headers: _credentials);
+    final res = await http.get(_url, headers: httpRequestHeaders);
     if (res.statusCode == 200) {
       // Get list of hourly data as geojson.
       return await parseMetOfficeData(res.body);
@@ -105,6 +108,19 @@ class WeatherDataBloc {
           (ts['maxScreenAirTemp'] + ts['minScreenAirTemp']) / 2;
     }).toList();
     return threeHourlyData;
+  }
+
+  Future<void> _getAndParseMapOverlayImageList() async {
+    // API http request url.
+    final _url = '$getMapOverlayBaseUrl()$datapointKey';
+    final res = await http.get(_url);
+    if (res.statusCode == 200) {
+      // Get list of map overlay data.
+      final parsedData = await parseMapOverlayData(res.body);
+      
+    } else {
+      throw MetOfficeApiError('HTTP GET request error: ${res.body}');
+    }
   }
 
   Future<void> saveDefaultLocation(Coordinates coordinates) async {
