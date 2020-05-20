@@ -16,6 +16,11 @@ String getBaseUrl(DataType dataType) {
   return 'https://api-metoffice.apiconnect.ibmcloud.com/metoffice/production/v0/forecasts/point/${getDataType(dataType)}?';
 }
 
+/// Returns the base Met office API url for map overlay data.
+String getMapOverlayBaseUrl() {
+  return 'http://datapoint.metoffice.gov.uk/public/data/layer/wxfcs/all/json/capabilities?key=';
+}
+
 Future<List> parseMetOfficeData(String data) async {
   final _feature = (await featuresFromGeoJson(data)).collection[0];
   return _feature.properties.entries
