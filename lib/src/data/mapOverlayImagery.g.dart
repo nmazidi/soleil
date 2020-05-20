@@ -32,9 +32,6 @@ class _$MapOverlayImagerySerializer
       'timeSteps',
       serializers.serialize(object.timeSteps,
           specifiedType: const FullType(List, const [const FullType(int)])),
-      'baseUrl',
-      serializers.serialize(object.baseUrl,
-          specifiedType: const FullType(String)),
     ];
 
     return result;
@@ -70,10 +67,6 @@ class _$MapOverlayImagerySerializer
                       const FullType(List, const [const FullType(int)]))
               as List<int>;
           break;
-        case 'baseUrl':
-          result.baseUrl = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
-          break;
       }
     }
 
@@ -90,19 +83,13 @@ class _$MapOverlayImagery extends MapOverlayImagery {
   final DateTime defaultTime;
   @override
   final List<int> timeSteps;
-  @override
-  final String baseUrl;
 
   factory _$MapOverlayImagery(
           [void Function(MapOverlayImageryBuilder) updates]) =>
       (new MapOverlayImageryBuilder()..update(updates)).build();
 
   _$MapOverlayImagery._(
-      {this.layerName,
-      this.imageFormat,
-      this.defaultTime,
-      this.timeSteps,
-      this.baseUrl})
+      {this.layerName, this.imageFormat, this.defaultTime, this.timeSteps})
       : super._() {
     if (layerName == null) {
       throw new BuiltValueNullFieldError('MapOverlayImagery', 'layerName');
@@ -115,9 +102,6 @@ class _$MapOverlayImagery extends MapOverlayImagery {
     }
     if (timeSteps == null) {
       throw new BuiltValueNullFieldError('MapOverlayImagery', 'timeSteps');
-    }
-    if (baseUrl == null) {
-      throw new BuiltValueNullFieldError('MapOverlayImagery', 'baseUrl');
     }
   }
 
@@ -136,18 +120,15 @@ class _$MapOverlayImagery extends MapOverlayImagery {
         layerName == other.layerName &&
         imageFormat == other.imageFormat &&
         defaultTime == other.defaultTime &&
-        timeSteps == other.timeSteps &&
-        baseUrl == other.baseUrl;
+        timeSteps == other.timeSteps;
   }
 
   @override
   int get hashCode {
     return $jf($jc(
-        $jc(
-            $jc($jc($jc(0, layerName.hashCode), imageFormat.hashCode),
-                defaultTime.hashCode),
-            timeSteps.hashCode),
-        baseUrl.hashCode));
+        $jc($jc($jc(0, layerName.hashCode), imageFormat.hashCode),
+            defaultTime.hashCode),
+        timeSteps.hashCode));
   }
 
   @override
@@ -156,8 +137,7 @@ class _$MapOverlayImagery extends MapOverlayImagery {
           ..add('layerName', layerName)
           ..add('imageFormat', imageFormat)
           ..add('defaultTime', defaultTime)
-          ..add('timeSteps', timeSteps)
-          ..add('baseUrl', baseUrl))
+          ..add('timeSteps', timeSteps))
         .toString();
   }
 }
@@ -182,10 +162,6 @@ class MapOverlayImageryBuilder
   List<int> get timeSteps => _$this._timeSteps;
   set timeSteps(List<int> timeSteps) => _$this._timeSteps = timeSteps;
 
-  String _baseUrl;
-  String get baseUrl => _$this._baseUrl;
-  set baseUrl(String baseUrl) => _$this._baseUrl = baseUrl;
-
   MapOverlayImageryBuilder();
 
   MapOverlayImageryBuilder get _$this {
@@ -194,7 +170,6 @@ class MapOverlayImageryBuilder
       _imageFormat = _$v.imageFormat;
       _defaultTime = _$v.defaultTime;
       _timeSteps = _$v.timeSteps;
-      _baseUrl = _$v.baseUrl;
       _$v = null;
     }
     return this;
@@ -220,8 +195,7 @@ class MapOverlayImageryBuilder
             layerName: layerName,
             imageFormat: imageFormat,
             defaultTime: defaultTime,
-            timeSteps: timeSteps,
-            baseUrl: baseUrl);
+            timeSteps: timeSteps);
     replace(_$result);
     return _$result;
   }

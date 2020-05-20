@@ -23,8 +23,6 @@ abstract class MapOverlayImagery
   /// Steps in time to add on to defaultTime.
   List<int> get timeSteps;
 
-  /// URL for getting the images.
-  String get baseUrl;
 
   MapOverlayImagery._();
   factory MapOverlayImagery([void Function(MapOverlayImageryBuilder) updates]) =
@@ -32,8 +30,9 @@ abstract class MapOverlayImagery
 }
 
 Future<List> parseMapOverlayData(String data) async {
-  final parsed = json.jsonDecode(data);
-  
+  final jsonData = json.jsonDecode(data);
+  final parsedData = List<String>.from(jsonData[2]);
+  return parsedData;
 }
 
 List<MapOverlayImagery> deserializeMapOverlayData() {
